@@ -1,0 +1,27 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /Store
+
+spring:
+  datasource:
+    url: ${DBMS_CONNECTION:jdbc:mysql://localhost:3306/Store_V1}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DBMS_USERNAME:root}
+    password: ${DBMS_PASSWORD:0967971192azZ@}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+jwt:
+  signerKey: "lvgv0Dcw/ht/m8F7XhcbYyfwCZQCS2gdKJ6HoetRBsWja9vek6jxZT8bxZijMbws"
+  validDuration: 36000 #in second
+  refreshableDuration: 360000 #in second
+
+logging:
+  level:
+    org.springframework.security.web.FilterChainProxy: DEBUG
+    org.springframework.security.web.access: DEBUG
+    org.springframework.security.web.authentication: DEBUG
+    org.springframework.security.oauth2: DEBUG
