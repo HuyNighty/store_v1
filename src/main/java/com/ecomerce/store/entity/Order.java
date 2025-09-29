@@ -1,8 +1,8 @@
 package com.ecomerce.store.entity;
 
 import com.ecomerce.store.entity.base.BaseTimeEntity;
-import com.ecomerce.store.enums.OrderEnums.PaymentMethod;
-import com.ecomerce.store.enums.OrderEnums.StatusOrder;
+import com.ecomerce.store.enums.entity_enums.OrderEnums.PaymentMethod;
+import com.ecomerce.store.enums.entity_enums.OrderEnums.StatusOrder;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

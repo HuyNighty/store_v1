@@ -1,4 +1,4 @@
-package com.ecomerce.store.enums.BookAuthorEnums;
+package com.ecomerce.store.enums.entity_enums.BookAuthorEnums;
 
 public enum AuthorRole {
     MAIN_AUTHOR,

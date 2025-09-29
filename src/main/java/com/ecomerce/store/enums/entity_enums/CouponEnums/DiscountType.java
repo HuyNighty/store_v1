@@ -1,4 +1,4 @@
-package com.ecomerce.store.enums.CouponEnums;
+package com.ecomerce.store.enums.entity_enums.CouponEnums;
 
 public enum DiscountType {
     PERCENTAGE,

@@ -1,4 +1,4 @@
-package com.ecomerce.store.enums.OrderEnums;
+package com.ecomerce.store.enums.entity_enums.OrderEnums;
 
 public enum PaymentMethod {
     COD,

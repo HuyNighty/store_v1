@@ -1,7 +1,7 @@
 package com.ecomerce.store.entity;
 
 import com.ecomerce.store.entity.base.BaseSoftDeleteEntity;
-import com.ecomerce.store.enums.AssetEnums.AssetType;
+import com.ecomerce.store.enums.entity_enums.AssetEnums.AssetType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

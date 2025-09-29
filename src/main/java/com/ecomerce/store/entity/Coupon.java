@@ -1,7 +1,7 @@
 package com.ecomerce.store.entity;
 
 import com.ecomerce.store.entity.base.BaseSoftDeleteEntity;
-import com.ecomerce.store.enums.CouponEnums.DiscountType;
+import com.ecomerce.store.enums.entity_enums.CouponEnums.DiscountType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;

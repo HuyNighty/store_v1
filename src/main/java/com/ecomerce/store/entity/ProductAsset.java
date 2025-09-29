@@ -1,7 +1,7 @@
 package com.ecomerce.store.entity;
 
 import com.ecomerce.store.entity.key.ProductAssetId;
-import com.ecomerce.store.enums.ProductAssetEnums.ProductAssetType;
+import com.ecomerce.store.enums.entity_enums.ProductAssetEnums.ProductAssetType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

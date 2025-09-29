@@ -1,4 +1,4 @@
-package com.ecomerce.store.enums.AttributeEnums;
+package com.ecomerce.store.enums.entity_enums.AttributeEnums;
 
 public enum DataType {
     STRING,

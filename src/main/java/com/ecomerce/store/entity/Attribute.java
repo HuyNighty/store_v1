@@ -1,7 +1,7 @@
 package com.ecomerce.store.entity;
 
 import com.ecomerce.store.entity.base.BaseTimeEntity;
-import com.ecomerce.store.enums.AttributeEnums.DataType;
+import com.ecomerce.store.enums.entity_enums.AttributeEnums.DataType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

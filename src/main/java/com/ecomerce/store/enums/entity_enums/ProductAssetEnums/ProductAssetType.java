@@ -1,4 +1,4 @@
-package com.ecomerce.store.enums.ProductAssetEnums;
+package com.ecomerce.store.enums.entity_enums.ProductAssetEnums;
 
 public enum ProductAssetType {
     MAIN,

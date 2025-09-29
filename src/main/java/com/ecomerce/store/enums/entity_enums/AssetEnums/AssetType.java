@@ -1,4 +1,4 @@
-package com.ecomerce.store.enums.AssetEnums;
+package com.ecomerce.store.enums.entity_enums.AssetEnums;
 
 public enum AssetType {
     IMAGE,

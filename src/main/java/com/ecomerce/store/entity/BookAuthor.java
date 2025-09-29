@@ -2,7 +2,7 @@ package com.ecomerce.store.entity;
 
 import com.ecomerce.store.entity.base.BaseTimeEntity;
 import com.ecomerce.store.entity.key.BookAuthorId;
-import com.ecomerce.store.enums.BookAuthorEnums.AuthorRole;
+import com.ecomerce.store.enums.entity_enums.BookAuthorEnums.AuthorRole;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
