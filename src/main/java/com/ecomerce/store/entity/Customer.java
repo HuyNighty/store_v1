@@ -2,7 +2,6 @@ package com.ecomerce.store.entity;
 
 import com.ecomerce.store.entity.base.BaseTimeEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -20,21 +19,18 @@ public class Customer extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    UUID customerId;
+    @Column(columnDefinition = "VARCHAR(36)")
+    String customerId;
 
-    @NotNull
     @Column(nullable = false)
     String firstName;
 
-    @NotNull
     @Column(nullable = false)
     String lastName;
 
-    @NotNull
     @Column(nullable = false, length = 30)
     String phoneNumber;
 
-    @NotNull
     @Column(nullable = false)
     String address;
 

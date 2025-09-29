@@ -12,7 +12,9 @@ import org.springframework.http.HttpStatusCode;
 @AllArgsConstructor
 public enum ErrorCode {
     PERMISSION_EXISTED(1000, "Permission existed", HttpStatus.BAD_REQUEST),
-    PERMISSION_NOT_FOUND(1001, "Permission not found", HttpStatus.NOT_FOUND),;
+    PERMISSION_NOT_FOUND(1001, "Permission not found", HttpStatus.NOT_FOUND),
+    USER_NAME_EXISTED(1002, "Username existed", HttpStatus.BAD_REQUEST),
+    EMAIL_EXISTED(1003, "Email existed", HttpStatus.BAD_REQUEST),;
 
     int code;
     String message;

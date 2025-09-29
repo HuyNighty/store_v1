@@ -20,7 +20,7 @@ public class UserRole {
 
     @ManyToOne
     @MapsId("userId")
-    @JoinColumn(name = "user_id",  nullable = false)
+    @JoinColumn(name = "user_id",  nullable = false, columnDefinition = "VARCHAR(36)")
     User user;
 
     @ManyToOne

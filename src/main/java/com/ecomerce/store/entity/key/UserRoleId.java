@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.util.UUID;
-
 @Embeddable
 @Getter
 @NoArgsConstructor
@@ -16,6 +14,6 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserRoleId {
 
-    UUID userId;
+    String userId;
     Integer roleId;
 }
