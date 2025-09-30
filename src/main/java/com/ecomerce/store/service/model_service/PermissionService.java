@@ -1,7 +1,7 @@
-package com.ecomerce.store.service;
+package com.ecomerce.store.service.model_service;
 
-import com.ecomerce.store.dto.request.PermissionRequest;
-import com.ecomerce.store.dto.response.PermissionResponse;
+import com.ecomerce.store.dto.request.model_request.PermissionRequest;
+import com.ecomerce.store.dto.response.model_response.PermissionResponse;
 
 import java.util.List;
 

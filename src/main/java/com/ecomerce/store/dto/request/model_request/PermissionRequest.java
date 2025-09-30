@@ -1,4 +1,4 @@
-package com.ecomerce.store.dto.request;
+package com.ecomerce.store.dto.request.model_request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

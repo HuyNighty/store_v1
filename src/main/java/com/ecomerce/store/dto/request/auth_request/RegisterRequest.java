@@ -1,4 +1,4 @@
-package com.ecomerce.store.dto.request;
+package com.ecomerce.store.dto.request.auth_request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -29,5 +29,4 @@ public record RegisterRequest(
 
         @NotBlank
         String address
-) {
-}
+) {}

@@ -34,6 +34,8 @@ public class Customer extends BaseTimeEntity {
     @Column(nullable = false)
     String address;
 
+    @Builder.Default
+    @Column(columnDefinition = "INT DEFAULT 0")
     Integer loyaltyPoints = 0;
 
     @OneToOne(cascade = CascadeType.ALL)

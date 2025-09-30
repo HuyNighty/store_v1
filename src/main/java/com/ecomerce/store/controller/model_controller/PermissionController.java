@@ -1,9 +1,9 @@
-package com.ecomerce.store.controller;
+package com.ecomerce.store.controller.model_controller;
 
-import com.ecomerce.store.dto.request.PermissionRequest;
+import com.ecomerce.store.dto.request.model_request.PermissionRequest;
 import com.ecomerce.store.dto.response.ApiResponse;
-import com.ecomerce.store.dto.response.PermissionResponse;
-import com.ecomerce.store.service.PermissionService;
+import com.ecomerce.store.dto.response.model_response.PermissionResponse;
+import com.ecomerce.store.service.model_service.PermissionService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

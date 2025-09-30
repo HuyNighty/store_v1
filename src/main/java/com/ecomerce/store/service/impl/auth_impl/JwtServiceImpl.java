@@ -1,7 +1,7 @@
-package com.ecomerce.store.service.impl;
+package com.ecomerce.store.service.impl.auth_impl;
 
 import com.ecomerce.store.entity.User;
-import com.ecomerce.store.service.JwtService;
+import com.ecomerce.store.service.auth_service.JwtService;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;

@@ -1,4 +1,4 @@
-package com.ecomerce.store.service;
+package com.ecomerce.store.service.auth_service;
 
 import com.ecomerce.store.entity.User;
 

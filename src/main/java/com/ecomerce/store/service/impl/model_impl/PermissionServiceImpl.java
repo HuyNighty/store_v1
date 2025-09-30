@@ -1,13 +1,13 @@
-package com.ecomerce.store.service.impl;
+package com.ecomerce.store.service.impl.model_impl;
 
-import com.ecomerce.store.dto.request.PermissionRequest;
-import com.ecomerce.store.dto.response.PermissionResponse;
+import com.ecomerce.store.dto.request.model_request.PermissionRequest;
+import com.ecomerce.store.dto.response.model_response.PermissionResponse;
 import com.ecomerce.store.entity.Permission;
 import com.ecomerce.store.enums.error.ErrorCode;
 import com.ecomerce.store.exception.AppException;
-import com.ecomerce.store.mapper.PermissionMapper;
+import com.ecomerce.store.mapper.model_map.PermissionMapper;
 import com.ecomerce.store.repository.PermissionRepository;
-import com.ecomerce.store.service.PermissionService;
+import com.ecomerce.store.service.model_service.PermissionService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
