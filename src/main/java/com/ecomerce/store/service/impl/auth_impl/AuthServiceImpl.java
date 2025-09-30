@@ -4,6 +4,7 @@ import com.ecomerce.store.dto.request.auth_request.LoginRequest;
 import com.ecomerce.store.dto.request.auth_request.RegisterRequest;
 import com.ecomerce.store.dto.response.auth_response.LoginResponse;
 import com.ecomerce.store.dto.response.auth_response.RegisterResponse;
+import com.ecomerce.store.dto.response.auth_response.UserInfoResponse;
 import com.ecomerce.store.entity.Customer;
 import com.ecomerce.store.entity.Role;
 import com.ecomerce.store.entity.User;
@@ -21,6 +22,8 @@ import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -70,6 +73,28 @@ public class AuthServiceImpl implements AuthService {
 
         LoginResponse response = authMapper.toLoginResponse(user, user.getCustomer());
         response.setToken(token);
+        response.setRoles(roles);
+
+        return response;
+    }
+
+    @Override
+    public UserInfoResponse userInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String userName = authentication.getName();
+
+        User user = userRepository.findByUserName(userName).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NAME_NOT_FOUND));
+
+        Set<String> roles = user.getUserRoles()
+                .stream()
+                .map(userRole -> userRole.getRole().getRoleName())
+                .collect(Collectors.toSet());
+
+        Customer customer = user.getCustomer();
+
+        UserInfoResponse response = authMapper.toUserInfoResponse(user, customer);
         response.setRoles(roles);
 
         return response;

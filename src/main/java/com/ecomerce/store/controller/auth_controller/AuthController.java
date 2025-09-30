@@ -7,6 +7,7 @@ import com.ecomerce.store.dto.response.ApiResponse;
 import com.ecomerce.store.dto.response.auth_response.IntrospectResponse;
 import com.ecomerce.store.dto.response.auth_response.LoginResponse;
 import com.ecomerce.store.dto.response.auth_response.RegisterResponse;
+import com.ecomerce.store.dto.response.auth_response.UserInfoResponse;
 import com.ecomerce.store.service.auth_service.AuthService;
 import com.ecomerce.store.service.auth_service.JwtService;
 import com.nimbusds.jose.JOSEException;
@@ -14,12 +15,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 
@@ -59,6 +56,14 @@ public class AuthController {
         return ApiResponse
                 .<IntrospectResponse>builder()
                 .result(jwtService.introspect(introspectRequest))
+                .build();
+    }
+
+    @GetMapping("/user-info")
+    public ApiResponse<UserInfoResponse> userInfo() {
+        return ApiResponse
+                .<UserInfoResponse>builder()
+                .result(authService.userInfo())
                 .build();
     }
 }

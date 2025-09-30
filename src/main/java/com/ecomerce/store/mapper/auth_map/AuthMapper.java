@@ -3,6 +3,7 @@ package com.ecomerce.store.mapper.auth_map;
 import com.ecomerce.store.dto.request.auth_request.RegisterRequest;
 import com.ecomerce.store.dto.response.auth_response.LoginResponse;
 import com.ecomerce.store.dto.response.auth_response.RegisterResponse;
+import com.ecomerce.store.dto.response.auth_response.UserInfoResponse;
 import com.ecomerce.store.entity.Customer;
 import com.ecomerce.store.entity.User;
 import org.mapstruct.Mapper;
@@ -25,6 +26,10 @@ public interface AuthMapper {
     @Mapping(expression = "java(getFullName(customer))", target = "fullName")
     @Mapping(expression = "java(getLoyaltyPoints(customer))", target = "loyaltyPoints")
     LoginResponse toLoginResponse(User user, Customer customer);
+
+    @Mapping(expression = "java(getFullName(customer))", target = "fullName")
+    @Mapping(expression = "java(getLoyaltyPoints(customer))", target = "loyaltyPoints")
+    UserInfoResponse toUserInfoResponse(User user, Customer customer);
 
     default String getFullName(Customer customer) {
         if (customer == null) {

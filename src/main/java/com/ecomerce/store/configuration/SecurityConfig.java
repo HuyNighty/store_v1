@@ -30,7 +30,7 @@ import javax.crypto.spec.SecretKeySpec;
 @RequiredArgsConstructor
 public class SecurityConfig {
     final String[] PUBLIC_ENDPOINTS = {
-            "/api/auth/**"
+            "/api/auth/register", "api/auth/login", "api/auth/my_info"
     };
 
     @Value("${jwt.signerKey}")
@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                                .requestMatchers(HttpMethod.GET, "api/user")
+                                .requestMatchers(HttpMethod.GET, "/api/auth/ìì")
                                     .hasRole("ADMIN") // exam config, fix soon
                                 .anyRequest().authenticated()
                 )
