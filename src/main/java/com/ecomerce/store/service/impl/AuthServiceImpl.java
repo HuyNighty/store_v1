@@ -7,7 +7,6 @@ import com.ecomerce.store.entity.User;
 import com.ecomerce.store.enums.error.ErrorCode;
 import com.ecomerce.store.exception.AppException;
 import com.ecomerce.store.mapper.AuthMapper;
-import com.ecomerce.store.repository.CustomerRepository;
 import com.ecomerce.store.repository.UserRepository;
 import com.ecomerce.store.service.AuthService;
 import jakarta.transaction.Transactional;
@@ -16,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +22,6 @@ import java.util.Set;
 public class AuthServiceImpl implements AuthService {
 
     UserRepository userRepository;
-    CustomerRepository customerRepository;
 
     AuthMapper authMapper;
 
