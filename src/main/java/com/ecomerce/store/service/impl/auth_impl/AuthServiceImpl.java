@@ -5,12 +5,16 @@ import com.ecomerce.store.dto.request.auth_request.RegisterRequest;
 import com.ecomerce.store.dto.response.auth_response.LoginResponse;
 import com.ecomerce.store.dto.response.auth_response.RegisterResponse;
 import com.ecomerce.store.entity.Customer;
+import com.ecomerce.store.entity.Role;
 import com.ecomerce.store.entity.User;
+import com.ecomerce.store.entity.UserRole;
+import com.ecomerce.store.entity.key.UserRoleId;
 import com.ecomerce.store.enums.error.ErrorCode;
 import com.ecomerce.store.exception.AppException;
 import com.ecomerce.store.mapper.auth_map.AuthMapper;
-import com.ecomerce.store.repository.CustomerRepository;
+import com.ecomerce.store.repository.RoleRepository;
 import com.ecomerce.store.repository.UserRepository;
+import com.ecomerce.store.repository.UserRoleRepository;
 import com.ecomerce.store.service.auth_service.AuthService;
 import com.ecomerce.store.service.auth_service.JwtService;
 import jakarta.transaction.Transactional;
@@ -21,6 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -31,11 +37,14 @@ public class AuthServiceImpl implements AuthService {
     PasswordEncoder passwordEncoder;
 
     UserRepository userRepository;
+    RoleRepository roleRepository;
+    UserRoleRepository userRoleRepository;
 
     AuthMapper authMapper;
 
     @Override
     public LoginResponse login(LoginRequest request) {
+
         User user;
         if (request.identifier().contains("@")) {
             user = userRepository.findByEmail(request.identifier())
@@ -50,17 +59,22 @@ public class AuthServiceImpl implements AuthService {
         }
 
         user.setLastLoginAt(LocalDateTime.now());
+        userRepository.save(user);
 
         String token = jwtService.generateToken(user);
 
-        userRepository.save(user);
+        Set<String> roles = user.getUserRoles()
+                .stream()
+                .map(userRole -> userRole.getRole().getRoleName())
+                .collect(Collectors.toSet());
 
-        Customer customer = user.getCustomer();
-
-        LoginResponse response = authMapper.toLoginResponse(user, customer);
+        LoginResponse response = authMapper.toLoginResponse(user, user.getCustomer());
         response.setToken(token);
+        response.setRoles(roles);
+
         return response;
     }
+
 
     @Override
     @Transactional
@@ -82,6 +96,20 @@ public class AuthServiceImpl implements AuthService {
 
         user = userRepository.save(user);
 
+        Role defaultRole = roleRepository.findByRoleName("USER")
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+
+        UserRoleId id = new UserRoleId(user.getUserId(), defaultRole.getRoleId());
+
+        UserRole userRole = UserRole.builder()
+                .userRoleId(id)
+                .user(user)
+                .role(defaultRole)
+                .build();
+
+        userRoleRepository.save(userRole);
+
         return authMapper.toRegisterResponse(user, customer);
     }
+
 }

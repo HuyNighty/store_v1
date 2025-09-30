@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -20,4 +21,5 @@ public class LoginResponse {
     LocalDateTime lastLoginAt;
     Integer loyaltyPoints;
     String token;
+    Set<String> roles;
 }

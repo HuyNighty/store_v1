@@ -19,7 +19,8 @@ public enum ErrorCode {
     EMAIL_EXISTED(1003, "Email existed", HttpStatus.BAD_REQUEST),
     EMAIL_NOT_FOUND(1004, "Email not found", HttpStatus.NOT_FOUND),
     PHONE_NUMBER_NOT_FOUND(1005, "Phone number not found", HttpStatus.NOT_FOUND),
-    PASSWORD_MISMATCH(1006, "Password mismatch", HttpStatus.BAD_REQUEST),;
+    PASSWORD_MISMATCH(1006, "Password mismatch", HttpStatus.BAD_REQUEST),
+    ROLE_NOT_FOUND(1007, "Role not found", HttpStatus.NOT_FOUND),;
 
     int code;
     String message;

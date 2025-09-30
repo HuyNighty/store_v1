@@ -22,7 +22,21 @@ public interface AuthMapper {
     @Mapping(source = "customer.address", target = "address")
     RegisterResponse toRegisterResponse(User user, Customer customer);
 
-    @Mapping(expression = "java(customer.getFirstName()+ \" \" + customer.getLastName())", target = "fullName")
-    @Mapping(source = "customer.loyaltyPoints", target = "loyaltyPoints")
+    @Mapping(expression = "java(getFullName(customer))", target = "fullName")
+    @Mapping(expression = "java(getLoyaltyPoints(customer))", target = "loyaltyPoints")
     LoginResponse toLoginResponse(User user, Customer customer);
+
+    default String getFullName(Customer customer) {
+        if (customer == null) {
+            return "System Admin";
+        }
+        return customer.getFirstName() + " " + customer.getLastName();
+    }
+
+    default Integer getLoyaltyPoints(Customer customer) {
+        if (customer == null) {
+            return 0;
+        }
+        return customer.getLoyaltyPoints();
+    }
 }
