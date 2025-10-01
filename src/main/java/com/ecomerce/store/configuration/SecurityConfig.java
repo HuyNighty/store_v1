@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                                .requestMatchers(HttpMethod.GET, "/api/auth/ìì")
+                                .requestMatchers(HttpMethod.GET, "/api/auth/**")
                                     .hasRole("ADMIN") // exam config, fix soon
                                 .anyRequest().authenticated()
                 )

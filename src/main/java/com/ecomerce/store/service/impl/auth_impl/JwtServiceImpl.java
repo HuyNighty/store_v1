@@ -1,8 +1,15 @@
 package com.ecomerce.store.service.impl.auth_impl;
 
 import com.ecomerce.store.dto.request.auth_request.IntrospectRequest;
+import com.ecomerce.store.dto.request.auth_request.RefreshTokenRequest;
 import com.ecomerce.store.dto.response.auth_response.IntrospectResponse;
+import com.ecomerce.store.dto.response.auth_response.RefreshTokenResponse;
+import com.ecomerce.store.entity.InvalidatedToken;
 import com.ecomerce.store.entity.User;
+import com.ecomerce.store.enums.error.ErrorCode;
+import com.ecomerce.store.exception.AppException;
+import com.ecomerce.store.repository.InvalidatedTokenRepository;
+import com.ecomerce.store.repository.UserRepository;
 import com.ecomerce.store.service.auth_service.JwtService;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -28,6 +35,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtServiceImpl implements JwtService {
+
+    InvalidatedTokenRepository invalidatedTokenRepository;
+    UserRepository userRepository;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -88,11 +98,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public IntrospectResponse introspect(IntrospectRequest request)
-            throws JOSEException, ParseException {
-
-        String token = request.token();
-
+    public SignedJWT verifyToken(String token) throws ParseException, JOSEException {
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
 
         SignedJWT signedJWT = SignedJWT.parse(token);
@@ -101,11 +107,64 @@ public class JwtServiceImpl implements JwtService {
 
         boolean verified = signedJWT.verify(verifier);
 
-        return IntrospectResponse
+        if (!(verified && expiryTime.after(new Date()))) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+
+        if (invalidatedTokenRepository
+                .existsById(signedJWT.getJWTClaimsSet().getJWTID())
+        ) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+
+        return signedJWT;
+    }
+
+    @Override
+    public RefreshTokenResponse refreshToken(RefreshTokenRequest request)
+            throws ParseException, JOSEException {
+        SignedJWT signedJWT = verifyToken(request.refreshToken());
+
+        String jti = signedJWT.getJWTClaimsSet().getJWTID();
+        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        InvalidatedToken invalidatedToken = InvalidatedToken
                 .builder()
-                .verified(verified && expiryTime.after(new Date()))
+                .jti(jti)
+                .expiredAt(expiryTime)
+                .build();
+
+        invalidatedTokenRepository.save(invalidatedToken);
+
+        String userName = signedJWT.getJWTClaimsSet().getSubject();
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        String refreshToken = generateToken(user);
+
+        return RefreshTokenResponse
+                .builder()
+                .success(true)
+                .refreshToken(refreshToken)
                 .build();
     }
 
+    @Override
+    public IntrospectResponse introspect(IntrospectRequest request)
+            throws JOSEException, ParseException {
 
+        String token = request.token();
+        boolean isValid = true;
+
+        try {
+            verifyToken(token);
+        } catch (AppException e) {
+            isValid = false;
+        }
+
+        return IntrospectResponse
+                .builder()
+                .verified(isValid)
+                .build();
+    }
 }

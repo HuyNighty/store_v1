@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -27,5 +27,5 @@ public class InvalidatedToken {
 
     @NotNull
     @Column(nullable = false)
-    LocalDateTime expiredAt;
+    Date expiredAt;
 }

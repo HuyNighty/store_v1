@@ -9,6 +9,9 @@ import com.ecomerce.store.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Mapper(componentModel = "spring")
 public interface AuthMapper {
 
@@ -25,11 +28,21 @@ public interface AuthMapper {
 
     @Mapping(expression = "java(getFullName(customer))", target = "fullName")
     @Mapping(expression = "java(getLoyaltyPoints(customer))", target = "loyaltyPoints")
+    @Mapping(expression = "java(getRoles(user))", target = "roles")
     LoginResponse toLoginResponse(User user, Customer customer);
 
     @Mapping(expression = "java(getFullName(customer))", target = "fullName")
     @Mapping(expression = "java(getLoyaltyPoints(customer))", target = "loyaltyPoints")
+    @Mapping(expression = "java(getRoles(user))", target = "roles")
     UserInfoResponse toUserInfoResponse(User user, Customer customer);
+
+    default Set<String> getRoles(User user) {
+        if (user.getUserRoles() == null) return Set.of();
+        return user.getUserRoles()
+                .stream()
+                .map(userRole -> userRole.getRole().getRoleName())
+                .collect(Collectors.toSet());
+    }
 
     default String getFullName(Customer customer) {
         if (customer == null) {

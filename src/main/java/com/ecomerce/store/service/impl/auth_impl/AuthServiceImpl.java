@@ -1,23 +1,23 @@
 package com.ecomerce.store.service.impl.auth_impl;
 
 import com.ecomerce.store.dto.request.auth_request.LoginRequest;
+import com.ecomerce.store.dto.request.auth_request.LogoutRequest;
 import com.ecomerce.store.dto.request.auth_request.RegisterRequest;
 import com.ecomerce.store.dto.response.auth_response.LoginResponse;
 import com.ecomerce.store.dto.response.auth_response.RegisterResponse;
 import com.ecomerce.store.dto.response.auth_response.UserInfoResponse;
-import com.ecomerce.store.entity.Customer;
-import com.ecomerce.store.entity.Role;
-import com.ecomerce.store.entity.User;
-import com.ecomerce.store.entity.UserRole;
+import com.ecomerce.store.entity.*;
 import com.ecomerce.store.entity.key.UserRoleId;
 import com.ecomerce.store.enums.error.ErrorCode;
 import com.ecomerce.store.exception.AppException;
 import com.ecomerce.store.mapper.auth_map.AuthMapper;
+import com.ecomerce.store.repository.InvalidatedTokenRepository;
 import com.ecomerce.store.repository.RoleRepository;
 import com.ecomerce.store.repository.UserRepository;
 import com.ecomerce.store.repository.UserRoleRepository;
 import com.ecomerce.store.service.auth_service.AuthService;
 import com.ecomerce.store.service.auth_service.JwtService;
+import com.nimbusds.jose.JOSEException;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -42,6 +44,7 @@ public class AuthServiceImpl implements AuthService {
     UserRepository userRepository;
     RoleRepository roleRepository;
     UserRoleRepository userRoleRepository;
+    InvalidatedTokenRepository invalidatedTokenRepository;
 
     AuthMapper authMapper;
 
@@ -66,14 +69,8 @@ public class AuthServiceImpl implements AuthService {
 
         String token = jwtService.generateToken(user);
 
-        Set<String> roles = user.getUserRoles()
-                .stream()
-                .map(userRole -> userRole.getRole().getRoleName())
-                .collect(Collectors.toSet());
-
         LoginResponse response = authMapper.toLoginResponse(user, user.getCustomer());
         response.setToken(token);
-        response.setRoles(roles);
 
         return response;
     }
@@ -87,19 +84,35 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByUserName(userName).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NAME_NOT_FOUND));
 
-        Set<String> roles = user.getUserRoles()
-                .stream()
-                .map(userRole -> userRole.getRole().getRoleName())
-                .collect(Collectors.toSet());
-
-        Customer customer = user.getCustomer();
-
-        UserInfoResponse response = authMapper.toUserInfoResponse(user, customer);
-        response.setRoles(roles);
-
-        return response;
+        return authMapper.toUserInfoResponse(user, user.getCustomer());
     }
 
+    @Override
+    public Set<UserInfoResponse> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(user -> {
+                    Customer customer = user.getCustomer();
+                    return authMapper.toUserInfoResponse(user, customer);
+                })
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public void logout(LogoutRequest request) throws ParseException, JOSEException {
+        var signToken = jwtService.verifyToken(request.token());
+
+        String jti = signToken.getJWTClaimsSet().getJWTID();
+        Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
+
+        InvalidatedToken invalidatedToken = InvalidatedToken
+                .builder()
+                .jti(jti)
+                .expiredAt(expiryTime)
+                .build();
+
+        invalidatedTokenRepository.save(invalidatedToken);
+    }
 
     @Override
     @Transactional
