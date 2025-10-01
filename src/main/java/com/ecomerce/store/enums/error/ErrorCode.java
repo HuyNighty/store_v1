@@ -21,8 +21,10 @@ public enum ErrorCode {
     PHONE_NUMBER_NOT_FOUND(1005, "Phone number not found", HttpStatus.NOT_FOUND),
     PASSWORD_MISMATCH(1006, "Password mismatch", HttpStatus.BAD_REQUEST),
     ROLE_NOT_FOUND(1007, "Role not found", HttpStatus.NOT_FOUND),
-    UNAUTHENTICATED(1008, "Unauthenticated", HttpStatus.UNAUTHORIZED),;
-
+    PERMISSION_DENIED(1009, "Permission denied", HttpStatus.FORBIDDEN),
+    UNAUTHENTICATED(1008, "Unauthenticated", HttpStatus.UNAUTHORIZED),
+    UNAUTHORIZED(1009, "Unauthorized", HttpStatus.UNAUTHORIZED),
+    ;
     int code;
     String message;
     HttpStatusCode httpStatusCode;

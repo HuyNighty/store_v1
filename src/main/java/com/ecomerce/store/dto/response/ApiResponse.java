@@ -1,7 +1,10 @@
 package com.ecomerce.store.dto.response;
 
+import com.ecomerce.store.enums.error.ErrorCodeDetail;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
+
+import java.util.List;
 
 @Builder
 @Getter
@@ -15,4 +18,5 @@ public class ApiResponse<T> {
     int code = 200;
     String message;
     T result;
+    List<ErrorCodeDetail> errors;
 }
