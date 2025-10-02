@@ -27,6 +27,7 @@ public enum ErrorCode {
     UNAUTHORIZED(1009, "Unauthorized", HttpStatus.UNAUTHORIZED),
     ROLE_PERMISSION_NOT_FOUND(1012, "Role permission not found", HttpStatus.NOT_FOUND),
     ROLE_PERMISSION_ALREADY_EXISTED(1013, "Role permission already existed", HttpStatus.BAD_REQUEST),
+    PHONE_ALREADY_EXISTED(1014, "Phone already existed", HttpStatus.BAD_REQUEST),
     ;
     int code;
     String message;
