@@ -27,7 +27,7 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public PermissionResponse create(PermissionRequest request) {
-        if (permissionRepository.existsByPermissionName(request.permissionName())) {
+        if (permissionRepository.existsByPermissionNameIgnoreCase(request.permissionName())) {
             throw new AppException(ErrorCode.PERMISSION_EXISTED);
         }
 
@@ -46,13 +46,20 @@ public class PermissionServiceImpl implements PermissionService {
         Permission permission = permissionRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.PERMISSION_NOT_FOUND));
 
-        if (!permission.getPermissionName().equals(request.permissionName()) &&
-                permissionRepository.existsByPermissionName(request.permissionName()))
-        {
-            throw new AppException(ErrorCode.PERMISSION_EXISTED);
+        if (request.permissionName() != null && !(request.permissionName().isBlank())) {
+            boolean isExist = permissionRepository.existsByPermissionNameIgnoreCase(request.permissionName());
+            if (isExist && !permission.getPermissionName().equalsIgnoreCase(request.permissionName())) {
+                throw new AppException(ErrorCode.PERMISSION_EXISTED);
+            }
+            permission.setPermissionName(request.permissionName());
         }
-        permission.setDescription(request.description());
+
+        if (request.description() != null && !(request.description().isBlank())) {
+            permission.setDescription(request.description());
+        }
+
         permissionRepository.save(permission);
+
         return toResponse(permission);
     }
 
@@ -67,9 +74,10 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public PermissionResponse findById(Integer id) {
-        Permission permission = permissionRepository.findById(id)
+    public PermissionResponse findByPermissionName(String permissionName) {
+        Permission permission = permissionRepository.findByPermissionNameIgnoreCase(permissionName)
                 .orElseThrow(() -> new AppException(ErrorCode.PERMISSION_NOT_FOUND));
+
         return toResponse(permission);
     }
 

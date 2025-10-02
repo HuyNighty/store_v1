@@ -1,4 +1,4 @@
-package com.ecomerce.store.configuration;
+package com.ecomerce.store.configuration.security;
 
 import com.ecomerce.store.entity.Role;
 import com.ecomerce.store.entity.User;
@@ -29,7 +29,7 @@ public class ApplicationInitConfig {
             UserRoleRepository userRoleRepository
     ) {
         return args -> {
-            Role adminRole = roleRepository.findByRoleName("ADMIN")
+            Role adminRole = roleRepository.findByRoleNameIgnoreCase("ADMIN")
                     .orElseGet(() -> roleRepository.save(
                             Role.builder()
                                     .roleName("ADMIN")
@@ -37,7 +37,7 @@ public class ApplicationInitConfig {
                                     .build()
                     ));
 
-            roleRepository.findByRoleName("USER")
+            roleRepository.findByRoleNameIgnoreCase("USER")
                     .orElseGet(() -> roleRepository.save(
                             Role.builder()
                                     .roleName("USER")

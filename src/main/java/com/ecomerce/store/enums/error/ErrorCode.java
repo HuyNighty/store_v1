@@ -21,9 +21,12 @@ public enum ErrorCode {
     PHONE_NUMBER_NOT_FOUND(1005, "Phone number not found", HttpStatus.NOT_FOUND),
     PASSWORD_MISMATCH(1006, "Password mismatch", HttpStatus.BAD_REQUEST),
     ROLE_NOT_FOUND(1007, "Role not found", HttpStatus.NOT_FOUND),
-    PERMISSION_DENIED(1009, "Permission denied", HttpStatus.FORBIDDEN),
+    ROLE_ALREADY_EXISTED(1011, "Role already existed", HttpStatus.BAD_REQUEST),
+    PERMISSION_DENIED(1010, "Permission denied", HttpStatus.FORBIDDEN),
     UNAUTHENTICATED(1008, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1009, "Unauthorized", HttpStatus.UNAUTHORIZED),
+    ROLE_PERMISSION_NOT_FOUND(1012, "Role permission not found", HttpStatus.NOT_FOUND),
+    ROLE_PERMISSION_ALREADY_EXISTED(1013, "Role permission already existed", HttpStatus.BAD_REQUEST),
     ;
     int code;
     String message;

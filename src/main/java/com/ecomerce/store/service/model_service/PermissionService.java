@@ -10,6 +10,6 @@ public interface PermissionService {
     PermissionResponse create(PermissionRequest request);
     PermissionResponse update(Integer id, PermissionRequest request);
     void delete(Integer id);
-    PermissionResponse findById(Integer id);
+    PermissionResponse findByPermissionName(String permissionName);
     List<PermissionResponse> findAll();
 }

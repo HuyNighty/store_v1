@@ -134,7 +134,7 @@ public class AuthServiceImpl implements AuthService {
 
         user = userRepository.save(user);
 
-        Role defaultRole = roleRepository.findByRoleName("USER")
+        Role defaultRole = roleRepository.findByRoleNameIgnoreCase("USER")
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
 
         UserRoleId id = new UserRoleId(user.getUserId(), defaultRole.getRoleId());

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/permission")
+@RequestMapping("/api/permissions")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class PermissionController {
@@ -29,7 +29,7 @@ public class PermissionController {
                 .build();
     }
 
-    @PutMapping("/{permissionId}")
+    @PatchMapping("/{permissionId}")
     public ApiResponse<PermissionResponse> updatePermission(
             @RequestBody @Validated PermissionRequest permissionRequest,
             @PathVariable Integer permissionId
@@ -50,11 +50,11 @@ public class PermissionController {
                 .build();
     }
 
-    @GetMapping("/{permissionId}")
-    public ApiResponse<PermissionResponse> getPermission(@PathVariable Integer permissionId) {
+    @GetMapping("/{permissionName}")
+    public ApiResponse<PermissionResponse> getPermissionName(@PathVariable String permissionName) {
         return ApiResponse
                 .<PermissionResponse>builder()
-                .result(permissionService.findById(permissionId))
+                .result(permissionService.findByPermissionName(permissionName))
                 .build();
     }
 

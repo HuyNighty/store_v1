@@ -1,8 +1,7 @@
 package com.ecomerce.store.dto.request.model_request;
 
-public record PermissionRequest (
-
-        String permissionName,
+public record RoleRequest(
+        String roleName,
         String description
-) {}
-
+) {
+}

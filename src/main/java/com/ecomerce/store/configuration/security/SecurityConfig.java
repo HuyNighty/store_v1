@@ -1,4 +1,4 @@
-package com.ecomerce.store.configuration;
+package com.ecomerce.store.configuration.security;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +54,11 @@ public class SecurityConfig {
                         oauth2.jwt(jwtConfigurer ->
                                 jwtConfigurer.decoder(jwtDecoder())
                                         .jwtAuthenticationConverter(jwtAuthenticationConverter()))
-                );
+                                .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+                )
+                .exceptionHandling(exceptionHandler ->
+                        exceptionHandler.authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+                                .accessDeniedHandler(new CustomAccessDeniedHandler()));
 
         return http.build();
     }
