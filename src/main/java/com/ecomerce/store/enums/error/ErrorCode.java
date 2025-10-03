@@ -33,6 +33,9 @@ public enum ErrorCode {
     PRODUCT_NOT_FOUND(1017, "Product not found", HttpStatus.NOT_FOUND),
     CART_NOT_FOUND(1018, "Cart not found", HttpStatus.NOT_FOUND),
     CART_ITEM_NOT_FOUND(1019, "Cart item not found", HttpStatus.NOT_FOUND),
+    REVIEW_NOT_FOUND(1020, "Review not found", HttpStatus.NOT_FOUND),
+    FORBIDDEN(1021, "Forbidden", HttpStatus.FORBIDDEN),
+    INVALID_RATING(1022, "Invalid rating", HttpStatus.BAD_REQUEST),
     ;
     int code;
     String message;

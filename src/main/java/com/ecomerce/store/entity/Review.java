@@ -27,7 +27,6 @@ public class Review extends BaseTimeEntity {
     @Positive
     @NotNull
     @Column(nullable = false)
-    @Size(max = 10)
     Float rating;
 
     @Column(columnDefinition = "TEXT")
