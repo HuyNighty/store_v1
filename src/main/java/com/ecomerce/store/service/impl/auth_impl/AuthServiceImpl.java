@@ -11,10 +11,7 @@ import com.ecomerce.store.entity.key.UserRoleId;
 import com.ecomerce.store.enums.error.ErrorCode;
 import com.ecomerce.store.exception.AppException;
 import com.ecomerce.store.mapper.auth_map.AuthMapper;
-import com.ecomerce.store.repository.InvalidatedTokenRepository;
-import com.ecomerce.store.repository.RoleRepository;
-import com.ecomerce.store.repository.UserRepository;
-import com.ecomerce.store.repository.UserRoleRepository;
+import com.ecomerce.store.repository.*;
 import com.ecomerce.store.service.auth_service.AuthService;
 import com.ecomerce.store.service.auth_service.JwtService;
 import com.nimbusds.jose.JOSEException;
@@ -30,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,6 +43,7 @@ public class AuthServiceImpl implements AuthService {
     RoleRepository roleRepository;
     UserRoleRepository userRoleRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
+    CartRepository cartRepository;
 
     AuthMapper authMapper;
 
@@ -146,6 +145,13 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         userRoleRepository.save(userRole);
+
+        Cart cart = Cart.builder()
+                .user(user)
+                .cartItems(new HashSet<>())
+                .build();
+
+        cartRepository.save(cart);
 
         return authMapper.toRegisterResponse(user, customer);
     }

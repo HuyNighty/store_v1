@@ -32,7 +32,7 @@ public class CartItem extends BaseTimeEntity {
     @JoinColumn(name = "cart_id", nullable = false)
     Cart cart;
 
-    @OneToOne
-    @JoinColumn(name = "product_id",  nullable = false, unique = true, updatable = false)
+    @ManyToOne
+    @JoinColumn(name = "product_id",  nullable = false)
     Product product;
 }

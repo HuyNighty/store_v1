@@ -57,8 +57,8 @@ public class Product extends BaseSoftDeleteEntity {
     @NotNull
     Boolean featured = false;
 
-    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    CartItem cartItem;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<CartItem> cartItem;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<OrderItem> orderItem;

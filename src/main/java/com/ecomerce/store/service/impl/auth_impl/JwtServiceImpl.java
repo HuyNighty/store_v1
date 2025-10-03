@@ -61,6 +61,7 @@ public class JwtServiceImpl implements JwtService {
                 .issuer("Store_Book")
                 .issueTime(new Date())
                 .claim("scope", buildScope(user))
+                .claim("id", user.getUserId())
                 .expirationTime(Date.from(Instant.now().plus(VALIDATION_DURATION, ChronoUnit.SECONDS)))
                 .jwtID(UUID.randomUUID().toString())
                 .build();

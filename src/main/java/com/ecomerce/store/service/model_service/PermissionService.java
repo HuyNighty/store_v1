@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface PermissionService {
 
-    PermissionResponse create(PermissionRequest request);
-    PermissionResponse update(Integer id, PermissionRequest request);
-    void delete(Integer id);
+    PermissionResponse createPermission(PermissionRequest request);
+    PermissionResponse updatePermission(Integer id, PermissionRequest request);
+    void deletePermission(Integer id);
     PermissionResponse findByPermissionName(String permissionName);
     List<PermissionResponse> findAll();
 }

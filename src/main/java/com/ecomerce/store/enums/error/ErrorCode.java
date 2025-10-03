@@ -28,6 +28,11 @@ public enum ErrorCode {
     ROLE_PERMISSION_NOT_FOUND(1012, "Role permission not found", HttpStatus.NOT_FOUND),
     ROLE_PERMISSION_ALREADY_EXISTED(1013, "Role permission already existed", HttpStatus.BAD_REQUEST),
     PHONE_ALREADY_EXISTED(1014, "Phone already existed", HttpStatus.BAD_REQUEST),
+    PRODUCT_SKU_EXISTED(1015, "Product sku existed", HttpStatus.BAD_REQUEST),
+    PRODUCT_SLUG_EXISTED(1016, "Product slug existed", HttpStatus.BAD_REQUEST),
+    PRODUCT_NOT_FOUND(1017, "Product not found", HttpStatus.NOT_FOUND),
+    CART_NOT_FOUND(1018, "Cart not found", HttpStatus.NOT_FOUND),
+    CART_ITEM_NOT_FOUND(1019, "Cart item not found", HttpStatus.NOT_FOUND),
     ;
     int code;
     String message;

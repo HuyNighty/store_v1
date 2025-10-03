@@ -26,7 +26,7 @@ public class PermissionServiceImpl implements PermissionService {
     PermissionMapper permissionMapper;
 
     @Override
-    public PermissionResponse create(PermissionRequest request) {
+    public PermissionResponse createPermission(PermissionRequest request) {
         if (permissionRepository.existsByPermissionNameIgnoreCase(request.permissionName())) {
             throw new AppException(ErrorCode.PERMISSION_EXISTED);
         }
@@ -42,7 +42,7 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public PermissionResponse update(Integer id, PermissionRequest request) {
+    public PermissionResponse updatePermission(Integer id, PermissionRequest request) {
         Permission permission = permissionRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.PERMISSION_NOT_FOUND));
 
@@ -64,7 +64,7 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public void delete(Integer id) {
+    public void deletePermission(Integer id) {
         if(permissionRepository.existsById(id)){
             permissionRepository.deleteById(id);
         }
