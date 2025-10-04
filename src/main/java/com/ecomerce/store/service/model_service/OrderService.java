@@ -23,4 +23,5 @@ public interface OrderService {
 
     List<OrderResponse> getOrdersByUserId(String userId);
 
+    void cancelOrder(Jwt jwt, Integer orderId);
 }

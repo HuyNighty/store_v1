@@ -28,7 +28,8 @@ public class OrderController {
     @PreAuthorize("hasRole('USER')")
     public ApiResponse<OrderResponse> checkout(@RequestBody @Valid OrderRequest request,
                                                @AuthenticationPrincipal Jwt jwt) {
-        return ApiResponse.<OrderResponse>builder()
+        return ApiResponse
+                .<OrderResponse>builder()
                 .result(orderService.createOrderFromCart(jwt, request))
                 .build();
     }
@@ -37,22 +38,39 @@ public class OrderController {
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
     public ApiResponse<List<OrderResponse>> getMyOrders(@AuthenticationPrincipal Jwt jwt) {
-        return ApiResponse.<List<OrderResponse>>builder()
+        return ApiResponse
+                .<List<OrderResponse>>builder()
                 .result(orderService.getMyOrders(jwt))
                 .build();
     }
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/me/{orderId}")
-    public OrderResponse getOrderById(@PathVariable Integer orderId,
+    public ApiResponse<OrderResponse> getOrderById(@PathVariable Integer orderId,
                                       @AuthenticationPrincipal Jwt jwt) {
-        return orderService.getOrderById(jwt, orderId);
+        return ApiResponse
+                .<OrderResponse>builder()
+                .result(orderService.getOrderById(jwt, orderId))
+                .build();
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PatchMapping("/me/cancel/orders/{orderId}")
+    public ApiResponse<Void> cancelOrder(@AuthenticationPrincipal Jwt jwt,
+                                     @PathVariable Integer orderId) {
+        orderService.cancelOrder(jwt, orderId);
+        return ApiResponse
+                .<Void>builder()
+                .code(200)
+                .message("Order has been cancelled")
+                .build();
     }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<List<OrderResponse>> getAllOrders() {
-        return ApiResponse.<List<OrderResponse>>builder()
+        return ApiResponse
+                .<List<OrderResponse>>builder()
                 .result(orderService.getAllOrders())
                 .build();
     }
@@ -61,7 +79,8 @@ public class OrderController {
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<OrderResponse> updateStatus(@PathVariable Integer orderId,
                                                    @RequestBody UpdateStatusOrderRequest request) {
-        return ApiResponse.<OrderResponse>builder()
+        return ApiResponse
+                .<OrderResponse>builder()
                 .result(orderService.updateStatus(orderId, request))
                 .build();
     }
@@ -70,7 +89,8 @@ public class OrderController {
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<OrderResponse> getOrderByUser(@PathVariable String userId,
                                                      @PathVariable Integer orderId) {
-        return ApiResponse.<OrderResponse>builder()
+        return ApiResponse
+                .<OrderResponse>builder()
                 .result(orderService.getOrderRoleAdmin(orderId, userId))
                 .build();
 
@@ -79,7 +99,8 @@ public class OrderController {
     @GetMapping("/admin/users/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<List<OrderResponse>> getOrdersByUser(@PathVariable String userId) {
-        return ApiResponse.<List<OrderResponse>>builder()
+        return ApiResponse
+                .<List<OrderResponse>>builder()
                 .result(orderService.getOrdersByUserId(userId))
                 .build();
     }

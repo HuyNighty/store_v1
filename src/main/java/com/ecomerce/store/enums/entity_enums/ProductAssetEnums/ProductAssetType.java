@@ -4,5 +4,7 @@ public enum ProductAssetType {
     MAIN,
     SECONDARY,
     GALLERY,
-    MANUAL
+    MANUAL,
+    THUMBNAIL,
+    PREVIEW
 }

@@ -42,6 +42,10 @@ public enum ErrorCode {
     CART_EMPTY(1026, "Cart empty", HttpStatus.BAD_REQUEST),
     INVALID_STATUS_TRANSITION(1027, "Invalid status transition", HttpStatus.BAD_REQUEST),
     ORDER_ALREADY_FINALIZED(1028, "Order already finalized", HttpStatus.BAD_REQUEST),
+    CANCELED_INVALID(1028, "Can not cancel", HttpStatus.BAD_REQUEST),
+    URL_EXISTED(1029, "Url existed", HttpStatus.BAD_REQUEST),
+    ASSET_NOT_FOUND(1030, "Asset not found", HttpStatus.NOT_FOUND),
+    ASSET_DELETED(1031, "Asset deleted", HttpStatus.BAD_REQUEST),
     ;
     int code;
     String message;

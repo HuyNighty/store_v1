@@ -24,12 +24,10 @@ public class Asset extends BaseSoftDeleteEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer assetId;
 
-    @NotNull
     @Column(nullable = false, unique = true)
     String url;
 
     @Column(nullable = false)
-    @NotNull
     @Enumerated(EnumType.STRING)
     AssetType type;
 

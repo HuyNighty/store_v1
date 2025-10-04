@@ -136,6 +136,32 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public void cancelOrder(Jwt jwt, Integer orderId) {
+        String userId = jwt.getClaimAsString("id");
+
+        Order order = orderRepository.findByOrderIdAndUserUserId(orderId, userId)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+
+        if (order.getStatusOrder() == StatusOrder.CANCELED ||
+                order.getStatusOrder() == StatusOrder.COMPLETED) {
+            throw new AppException(ErrorCode.CANCELED_INVALID);
+        }
+
+        if (order.getStatusOrder() == StatusOrder.PENDING ||
+                order.getStatusOrder() == StatusOrder.PAID) {
+
+            order.setStatusOrder(StatusOrder.CANCELED);
+            order.setCanceledAt(LocalDateTime.now());
+
+            order.getOrderItems().forEach(item -> item.setDeletedAt(LocalDateTime.now()));
+
+            orderRepository.save(order);
+        } else {
+            throw new AppException(ErrorCode.CANCELED_INVALID);
+        }
+    }
+
+    @Override
     public List<OrderResponse> getMyOrders(Jwt jwt) {
         String userId = jwt.getClaimAsString("id");
         List<Order> orders = orderRepository.findByUserUserId(userId);
