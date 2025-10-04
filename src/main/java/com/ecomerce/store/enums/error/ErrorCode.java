@@ -36,6 +36,12 @@ public enum ErrorCode {
     REVIEW_NOT_FOUND(1020, "Review not found", HttpStatus.NOT_FOUND),
     FORBIDDEN(1021, "Forbidden", HttpStatus.FORBIDDEN),
     INVALID_RATING(1022, "Invalid rating", HttpStatus.BAD_REQUEST),
+    ORDER_NOT_FOUND(1023, "Order not found", HttpStatus.NOT_FOUND),
+    ORDER_ITEM_NOT_FOUND(1024, "Order item not found", HttpStatus.NOT_FOUND),
+    INVALID_QUANTITY(1025, "Invalid quantity", HttpStatus.BAD_REQUEST),
+    CART_EMPTY(1026, "Cart empty", HttpStatus.BAD_REQUEST),
+    INVALID_STATUS_TRANSITION(1027, "Invalid status transition", HttpStatus.BAD_REQUEST),
+    ORDER_ALREADY_FINALIZED(1028, "Order already finalized", HttpStatus.BAD_REQUEST),
     ;
     int code;
     String message;
