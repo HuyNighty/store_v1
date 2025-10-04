@@ -5,6 +5,7 @@ import com.ecomerce.store.enums.entity_enums.AssetEnums.AssetType;
 public record AssetRequest(
         String url,
         AssetType type,
+        String fileName,
         String mimeType,
         Integer width,
         Integer height,

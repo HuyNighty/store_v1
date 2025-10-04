@@ -9,6 +9,7 @@ public record AssetResponse(
          Integer assetId,
          String url,
          AssetType type,
+         String fileName,
          String mimeType,
          Integer width,
          Integer height,

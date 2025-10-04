@@ -46,6 +46,8 @@ public enum ErrorCode {
     URL_EXISTED(1029, "Url existed", HttpStatus.BAD_REQUEST),
     ASSET_NOT_FOUND(1030, "Asset not found", HttpStatus.NOT_FOUND),
     ASSET_DELETED(1031, "Asset deleted", HttpStatus.BAD_REQUEST),
+    PRODUCT_ASSET_NOT_FOUND(1032, "Product asset not found", HttpStatus.NOT_FOUND),
+    PRODUCT_ASSET_EXISTED(1033, "Product asset existed", HttpStatus.BAD_REQUEST),
     ;
     int code;
     String message;

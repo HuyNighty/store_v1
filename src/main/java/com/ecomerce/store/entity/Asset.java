@@ -3,7 +3,6 @@ package com.ecomerce.store.entity;
 import com.ecomerce.store.entity.base.BaseSoftDeleteEntity;
 import com.ecomerce.store.enums.entity_enums.AssetEnums.AssetType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -26,6 +25,8 @@ public class Asset extends BaseSoftDeleteEntity {
 
     @Column(nullable = false, unique = true)
     String url;
+
+    String fileName;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

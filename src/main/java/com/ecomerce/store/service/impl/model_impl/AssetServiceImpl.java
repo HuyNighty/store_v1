@@ -63,8 +63,7 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public AssetResponse findById(Integer assetId) {
-        Asset asset = assetRepository.findById(assetId)
-                .orElseThrow(() -> new AppException(ErrorCode.ASSET_NOT_FOUND));
+        Asset asset = getActiveAsset(assetId);
         return assetMapper.toAssetResponse(asset);
     }
 
@@ -72,6 +71,10 @@ public class AssetServiceImpl implements AssetService {
     public AssetResponse findByType(AssetType assetType) {
         Asset asset = assetRepository.findByType(assetType)
                 .orElseThrow(() -> new AppException(ErrorCode.ASSET_NOT_FOUND));
+
+        if (asset.getDeletedAt() != null) {
+            throw new AppException(ErrorCode.ASSET_DELETED);
+        }
         return assetMapper.toAssetResponse(asset);
     }
 

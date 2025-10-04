@@ -33,6 +33,12 @@ public class ProductAsset {
     @Enumerated(EnumType.STRING)
     ProductAssetType type;
 
+    @Builder.Default
     @Column(nullable = false)
     Integer ordinal = 0;
+
+    @PrePersist
+    void prePersist() {
+        if (ordinal == null) ordinal = 0;
+    }
 }
