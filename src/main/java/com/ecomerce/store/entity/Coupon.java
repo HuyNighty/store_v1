@@ -48,6 +48,7 @@ public class Coupon extends BaseSoftDeleteEntity {
     Integer usageLimit;
 
     LocalDate validFrom;
+
     LocalDate validTo;
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")

@@ -48,6 +48,9 @@ public enum ErrorCode {
     ASSET_DELETED(1031, "Asset deleted", HttpStatus.BAD_REQUEST),
     PRODUCT_ASSET_NOT_FOUND(1032, "Product asset not found", HttpStatus.NOT_FOUND),
     PRODUCT_ASSET_EXISTED(1033, "Product asset existed", HttpStatus.BAD_REQUEST),
+    COUPON_CODE_EXISTED(1034, "Coupon code existed", HttpStatus.BAD_REQUEST),
+    COUPON_NOT_FOUND(1035, "Coupon not found", HttpStatus.NOT_FOUND),
+    COUPON_ALREADY_DELETED(1036, "Coupon already deleted", HttpStatus.BAD_REQUEST),
     ;
     int code;
     String message;
