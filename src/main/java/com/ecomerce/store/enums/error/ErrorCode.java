@@ -51,6 +51,8 @@ public enum ErrorCode {
     COUPON_CODE_EXISTED(1034, "Coupon code existed", HttpStatus.BAD_REQUEST),
     COUPON_NOT_FOUND(1035, "Coupon not found", HttpStatus.NOT_FOUND),
     COUPON_ALREADY_DELETED(1036, "Coupon already deleted", HttpStatus.BAD_REQUEST),
+    AUTHOR_EXISTED(1037, "Author existed", HttpStatus.BAD_REQUEST),
+    AUTHOR_NOT_FOUND(1038, "Author not found", HttpStatus.NOT_FOUND),
     ;
     int code;
     String message;

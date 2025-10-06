@@ -39,8 +39,8 @@ public class Author extends BaseTimeEntity {
     @NotNull
     Nationality nationality;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "asset_id",  nullable = false, unique = true, updatable = false)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "asset_id", unique = true, updatable = false)
     Asset asset;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
