@@ -56,6 +56,9 @@ public enum ErrorCode {
     BOOK_AUTHOR_NOT_FOUND(1039, "Book author not found", HttpStatus.NOT_FOUND),
     DUPLICATE_ATTRIBUTE_NAME(1040, "Duplicate attribute name", HttpStatus.BAD_REQUEST),
     ATTRIBUTE_NOT_FOUND(1041, "Attribute not found", HttpStatus.NOT_FOUND),
+    PRODUCT_ATTRIBUTE_VALUE_NOT_FOUND(1042, "Product attribute value not found", HttpStatus.NOT_FOUND),
+    INVALID_ATTRIBUTE_VALUE(1043, "Invalid attribute value", HttpStatus.BAD_REQUEST),
+    INVALID_ATTRIBUTE_TYPE(1044, "Invalid attribute type", HttpStatus.BAD_REQUEST),
     ;
     int code;
     String message;

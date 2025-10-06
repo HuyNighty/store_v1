@@ -8,5 +8,6 @@ public enum DataType {
     DATETIME,
     DECIMAL,
     JSON,
-    OBJECT
+    OBJECT,
+    TEXT
 }
