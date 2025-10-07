@@ -59,6 +59,9 @@ public enum ErrorCode {
     PRODUCT_ATTRIBUTE_VALUE_NOT_FOUND(1042, "Product attribute value not found", HttpStatus.NOT_FOUND),
     INVALID_ATTRIBUTE_VALUE(1043, "Invalid attribute value", HttpStatus.BAD_REQUEST),
     INVALID_ATTRIBUTE_TYPE(1044, "Invalid attribute type", HttpStatus.BAD_REQUEST),
+    CATEGORY_NOT_FOUND(1045, "Category not found", HttpStatus.NOT_FOUND),
+    CATEGORY_ALREADY_EXISTS(1046, "Category already exists", HttpStatus.BAD_REQUEST),
+    PRODUCT_CATEGORY_NOT_FOUND(1047, "Product category not found", HttpStatus.NOT_FOUND),
     ;
     int code;
     String message;

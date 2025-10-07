@@ -34,7 +34,6 @@ public class Category extends BaseSoftDeleteEntity {
     String slug;
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
-    @NotNull
     Boolean isActive = true;
 
     @Column(columnDefinition = "TEXT")
