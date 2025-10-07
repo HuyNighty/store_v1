@@ -28,33 +28,24 @@ public class Order extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer orderId;
 
-    @NotNull
     @Column(nullable = false, unique = true)
     String orderNumber;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    @NotNull
     StatusOrder statusOrder;
 
     @Column(nullable = false)
-    @NotNull
-    @Positive
     BigDecimal totalAmount;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false,  length = 20)
-    @NotNull
     PaymentMethod paymentMethod;
 
-    @Size(max = 2000)
     @Column(columnDefinition = "TEXT")
-    @Size(max = 2000)
     String note;
 
     @Column(nullable =  false)
-    @NotNull
-    @Size(min = 5, max = 255)
     String shippingAddress;
 
     BigDecimal shippingCost;

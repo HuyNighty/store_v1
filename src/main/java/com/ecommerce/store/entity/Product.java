@@ -26,35 +26,28 @@ public class Product extends BaseSoftDeleteEntity {
     Integer productId;
 
     @Column(nullable = false, unique = true)
-    @NotNull
     String sku;
 
     @Column(unique = true)
-    @Pattern(regexp = "^[a-z0-9-]+$")
     String slug;
 
     @Column(nullable = false)
-    @NotNull
     String productName;
 
     @Column(nullable = false)
-    @NotNull
     BigDecimal price;
 
     BigDecimal salePrice;
 
     @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
-    @NotNull
     Integer stockQuantity = 0;
 
     BigDecimal weightG;
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
-    @NotNull
     Boolean isActive = true;
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
-    @NotNull
     Boolean featured = false;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)

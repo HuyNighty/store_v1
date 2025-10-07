@@ -22,17 +22,12 @@ public class Review extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer reviewId;
 
-    @Min(0)
-    @Max(10)
-    @Positive
-    @NotNull
     @Column(nullable = false)
     Float rating;
 
     @Column(columnDefinition = "TEXT")
     String comment;
 
-    @NotNull
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     Boolean isApproved = false;
 

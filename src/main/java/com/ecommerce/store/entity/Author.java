@@ -24,7 +24,6 @@ public class Author extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer authorId;
 
-    @NotNull
     @Column(nullable = false)
     String authorName;
 
@@ -36,7 +35,6 @@ public class Author extends BaseTimeEntity {
     LocalDate deathDate;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
     Nationality nationality;
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})

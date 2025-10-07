@@ -26,22 +26,16 @@ public class Coupon extends BaseSoftDeleteEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer couponId;
 
-    @NotNull
-    @NotBlank
     @Column(nullable = false, unique = true)
     String code;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @NotNull
     DiscountType discountType;
 
-    @NotNull
-    @DecimalMin("0.0")
     @Column(nullable = false)
     BigDecimal discountValue;
 
-    @DecimalMin("0.0")
     @Column(nullable = false, columnDefinition = "DECIMAL(10,2) DEFAULT 0")
     BigDecimal minOrderAmount = BigDecimal.ZERO;
 

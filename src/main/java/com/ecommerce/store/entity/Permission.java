@@ -21,7 +21,6 @@ public class Permission {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer permissionId;
 
-    @NotNull
     @Column(nullable = false, length = 40, unique = true)
     String permissionName;
 

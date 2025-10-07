@@ -26,11 +26,9 @@ public class Category extends BaseSoftDeleteEntity {
     Integer parentId = 0;
 
     @Column(nullable = false)
-    @NotNull
     String categoryName;
 
     @Column(nullable = false)
-    @NotNull
     String slug;
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")

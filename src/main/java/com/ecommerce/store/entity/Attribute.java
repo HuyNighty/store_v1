@@ -23,7 +23,6 @@ public class Attribute extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer attributeId;
 
-    @NotNull
     @Column(nullable = false, unique = true, length = 50)
     String attributeName;
 

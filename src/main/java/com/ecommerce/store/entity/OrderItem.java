@@ -23,14 +23,12 @@ public class OrderItem extends BaseSoftDeleteEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer orderItemId;
 
-    @NotNull
     @Column(nullable = false)
     @Positive
     Integer quantity;
 
     @Positive
     @Column(nullable = false)
-    @NotNull
     BigDecimal unitPrice;
 
     @ManyToOne

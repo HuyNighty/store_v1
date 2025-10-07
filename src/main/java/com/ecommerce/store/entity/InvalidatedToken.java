@@ -21,11 +21,9 @@ import java.util.Date;
 public class InvalidatedToken {
 
     @Id
-    @NotNull
     @Column(nullable = false, unique = true)
     String jti;
 
-    @NotNull
     @Column(nullable = false)
     Date expiredAt;
 }
