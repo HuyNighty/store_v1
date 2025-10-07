@@ -32,7 +32,6 @@ public class Asset extends BaseSoftDeleteEntity {
     @Enumerated(EnumType.STRING)
     AssetType type;
 
-    @Pattern(regexp = "^[a-zA-Z0-9]+/[a-zA-Z0-9\\-\\.]+$")
     String mimeType;
 
     Integer width;

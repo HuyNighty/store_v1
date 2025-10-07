@@ -7,12 +7,12 @@ import lombok.Builder;
 
 @Builder
 public record OrderRequest(
-        @NotNull
+        @NotNull(message = "Shipping address is required")
         String shippingAddress,
 
         @Size(max = 2000)
         String note,
 
-        @NotNull
+        @NotNull(message = "Payment method is required")
         PaymentMethod paymentMethod
 ) {}

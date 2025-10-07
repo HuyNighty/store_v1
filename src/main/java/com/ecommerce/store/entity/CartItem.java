@@ -22,7 +22,6 @@ public class CartItem extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer cartItemId;
 
-    @Positive
     Integer quantity;
 
     BigDecimal unitPrice;
