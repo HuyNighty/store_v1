@@ -50,7 +50,9 @@ public class CouponServiceImpl implements CouponService {
         }
 
         couponMapper.updateCouponFromRequest(request, coupon);
+
         coupon.setUpdatedAt(LocalDateTime.now());
+
         couponRepository.save(coupon);
 
         return couponMapper.toResponse(coupon);

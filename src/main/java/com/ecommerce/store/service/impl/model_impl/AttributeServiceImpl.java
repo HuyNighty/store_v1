@@ -44,6 +44,7 @@ public class AttributeServiceImpl implements AttributeService {
 
         attributeMapper.updateAttributeFromRequest(request, attribute);
         attribute.setUpdatedAt(LocalDateTime.now());
+
         attributeRepository.save(attribute);
         return attributeMapper.toResponse(attribute);
     }

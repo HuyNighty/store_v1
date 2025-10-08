@@ -43,7 +43,8 @@ public class RoleController {
     @DeleteMapping("/{roleId}")
     public ApiResponse<Void> deleteRole(@PathVariable Integer roleId) {
         roleService.deleteRole(roleId);
-        return ApiResponse.<Void>builder()
+        return ApiResponse
+                .<Void>builder()
                 .code(200)
                 .message("Role deleted successfully")
                 .build();
@@ -59,7 +60,8 @@ public class RoleController {
 
     @GetMapping("/{name}")
     public ApiResponse<RoleResponse> getRoleByName(@PathVariable String name) {
-        return ApiResponse.<RoleResponse>builder()
+        return ApiResponse
+                .<RoleResponse>builder()
                 .result(roleService.findRoleByName(name))
                 .build();
     }

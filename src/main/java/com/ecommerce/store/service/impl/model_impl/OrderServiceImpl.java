@@ -116,6 +116,7 @@ public class OrderServiceImpl implements OrderService {
             default -> {}
         }
 
+        order.setUpdatedAt(LocalDateTime.now());
         orderRepository.save(order);
         return orderMapper.toOrderResponse(order);
     }

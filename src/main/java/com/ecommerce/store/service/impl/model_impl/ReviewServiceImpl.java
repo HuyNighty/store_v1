@@ -74,6 +74,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
         if (request.comment() != null) review.setComment(request.comment());
 
+        review.setUpdatedAt(LocalDateTime.now());
         reviewRepository.save(review);
         return reviewMapper.toResponse(review);
     }

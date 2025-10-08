@@ -14,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -58,6 +59,7 @@ public class PermissionServiceImpl implements PermissionService {
             permission.setDescription(request.description());
         }
 
+        permission.setUpdatedAt(LocalDateTime.now());
         permissionRepository.save(permission);
 
         return toResponse(permission);

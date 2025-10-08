@@ -24,7 +24,8 @@ public class RolePermissionController {
     @PostMapping("/assign")
     public ApiResponse<RolePermissionResponse> assignPermission(
             @RequestBody RolePermissionRequest request) {
-        return ApiResponse.<RolePermissionResponse>builder()
+        return ApiResponse
+                .<RolePermissionResponse>builder()
                 .result(rolePermissionService.assignPermission(request))
                 .build();
     }
@@ -43,7 +44,8 @@ public class RolePermissionController {
     @GetMapping("/{roleId}")
     public ApiResponse<List<RolePermissionResponse>> getPermissionsByRole(
             @PathVariable Integer roleId) {
-        return ApiResponse.<List<RolePermissionResponse>>builder()
+        return ApiResponse
+                .<List<RolePermissionResponse>>builder()
                 .result(rolePermissionService.getPermissionsByRole(roleId))
                 .build();
     }

@@ -24,7 +24,8 @@ public class ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ApiResponse<ProductResponse> createProduct(@RequestBody @Valid ProductRequest request) {
-        return ApiResponse.<ProductResponse>builder()
+        return ApiResponse
+                .<ProductResponse>builder()
                 .result(productService.createProduct(request))
                 .build();
     }
@@ -32,7 +33,8 @@ public class ProductController {
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping("/{productId}")
     public ApiResponse<ProductResponse> getProductById(@PathVariable Integer productId) {
-        return ApiResponse.<ProductResponse>builder()
+        return ApiResponse
+                .<ProductResponse>builder()
                 .result(productService.getProductById(productId))
                 .build();
     }
@@ -40,7 +42,8 @@ public class ProductController {
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping
     public ApiResponse<List<ProductResponse>> getAllProducts() {
-        return ApiResponse.<List<ProductResponse>>builder()
+        return ApiResponse
+                .<List<ProductResponse>>builder()
                 .result(productService.getAllProducts())
                 .build();
     }
@@ -50,7 +53,8 @@ public class ProductController {
     public ApiResponse<ProductResponse> updateProduct(
             @PathVariable Integer productId,
             @RequestBody @Valid ProductRequest request) {
-        return ApiResponse.<ProductResponse>builder()
+        return ApiResponse
+                .<ProductResponse>builder()
                 .result(productService.updateProduct(productId, request))
                 .build();
     }
@@ -59,7 +63,8 @@ public class ProductController {
     @DeleteMapping("/{productId}")
     public ApiResponse<Void> deleteProduct(@PathVariable Integer productId) {
         productService.deleteProduct(productId);
-        return ApiResponse.<Void>builder()
+        return ApiResponse
+                .<Void>builder()
                 .code(200)
                 .message("Delete Product successfully")
                 .build();

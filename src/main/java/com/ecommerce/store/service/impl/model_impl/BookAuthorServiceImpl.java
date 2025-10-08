@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -104,6 +105,8 @@ public class BookAuthorServiceImpl implements BookAuthorService {
         if (request.authorRole() != null) {
             bookAuthor.setAuthorRole(request.authorRole());
         }
+
+        bookAuthor.setUpdatedAt(LocalDateTime.now());
 
         bookAuthorRepository.save(bookAuthor);
         return bookAuthorMapper.toResponse(bookAuthor);

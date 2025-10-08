@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -56,6 +57,7 @@ public class RoleServiceImpl implements RoleService {
             role.setDescription(request.description());
         }
 
+        role.setUpdatedAt(LocalDateTime.now());
         Role saved = roleRepository.save(role);
         return roleMapper.toRoleResponse(saved);
     }

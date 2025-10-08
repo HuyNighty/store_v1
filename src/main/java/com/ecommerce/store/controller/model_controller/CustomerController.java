@@ -23,14 +23,16 @@ public class CustomerController {
 
     @GetMapping
     public ApiResponse<List<CustomerResponse>> getAllCustomers() {
-        return ApiResponse.<List<CustomerResponse>>builder()
+        return ApiResponse
+                .<List<CustomerResponse>>builder()
                 .result(customerService.getAllCustomers())
                 .build();
     }
 
     @GetMapping("/{customerId}")
     public ApiResponse<CustomerResponse> getCustomerById(@PathVariable String customerId) {
-        return ApiResponse.<CustomerResponse>builder()
+        return ApiResponse
+                .<CustomerResponse>builder()
                 .result(customerService.getCustomerById(customerId))
                 .build();
     }
@@ -39,7 +41,8 @@ public class CustomerController {
     public ApiResponse<CustomerResponse> updateCustomer(
             @PathVariable String customerId,
             @RequestBody CustomerRequest request) {
-        return ApiResponse.<CustomerResponse>builder()
+        return ApiResponse
+                .<CustomerResponse>builder()
                 .result(customerService.updateCustomer(customerId, request))
                 .build();
     }

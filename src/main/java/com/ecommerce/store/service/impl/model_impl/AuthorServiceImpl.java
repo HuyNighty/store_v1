@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -60,6 +61,8 @@ public class AuthorServiceImpl implements AuthorService {
         } else {
             author.setDeathDate(request.deathDate());
         }
+
+        author.setUpdatedAt(LocalDateTime.now());
 
         authorRepository.save(author);
         return authorMapper.toResponse(author);

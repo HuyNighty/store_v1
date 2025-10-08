@@ -35,14 +35,16 @@ public class AssetController {
 
     @GetMapping
     public ApiResponse<List<AssetResponse>> getAllAssets() {
-        return ApiResponse.<List<AssetResponse>>builder()
+        return ApiResponse
+                .<List<AssetResponse>>builder()
                 .result(assetService.findAll())
                 .build();
     }
 
     @GetMapping("/{assetId}")
     public ApiResponse<AssetResponse> getAssetById(@PathVariable Integer assetId) {
-        return ApiResponse.<AssetResponse>builder()
+        return ApiResponse
+                .<AssetResponse>builder()
                 .result(assetService.findById(assetId))
                 .build();
     }
@@ -51,7 +53,8 @@ public class AssetController {
     public ApiResponse<AssetResponse> updateAsset(
             @PathVariable Integer assetId,
             @RequestBody @Valid AssetRequest request) {
-        return ApiResponse.<AssetResponse>builder()
+        return ApiResponse
+                .<AssetResponse>builder()
                 .result(assetService.updateAsset(assetId, request))
                 .message("Asset updated successfully")
                 .build();
@@ -60,7 +63,8 @@ public class AssetController {
     @DeleteMapping("/{assetId}")
     public ApiResponse<Void> deleteAsset(@PathVariable Integer assetId) {
         assetService.softDelete(assetId);
-        return ApiResponse.<Void>builder()
+        return ApiResponse
+                .<Void>builder()
                 .message("Asset deleted successfully")
                 .build();
     }

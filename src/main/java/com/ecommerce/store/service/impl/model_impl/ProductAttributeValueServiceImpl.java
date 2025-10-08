@@ -100,6 +100,7 @@ public class ProductAttributeValueServiceImpl implements ProductAttributeValueSe
 
         productAttributeValueMapper.updateFromRequest(request, entity);
         entity.setUpdatedAt(LocalDateTime.now());
+
         productAttributeValueRepository.save(entity);
         return productAttributeValueMapper.toResponse(entity);
     }

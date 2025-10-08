@@ -50,7 +50,9 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         categoryMapper.updateCategoryFromRequest(request, entity);
+
         entity.setUpdatedAt(LocalDateTime.now());
+
         categoryRepository.save(entity);
         return categoryMapper.toResponse(entity);
     }

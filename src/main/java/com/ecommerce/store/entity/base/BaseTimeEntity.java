@@ -20,12 +20,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class BaseTimeEntity {
 
-    @NotNull
-    @Column(updatable = false, nullable = false)
+    @Column(updatable = false)
     LocalDateTime createdAt;
 
-    @NotNull
-    @Column(nullable = false)
+    @Column
     LocalDateTime updatedAt;
 
     @PrePersist

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -51,6 +52,8 @@ public class CustomerServiceImpl implements CustomerService {
         if (request.loyaltyPoints() != null) {
             customer.setLoyaltyPoints(request.loyaltyPoints());
         }
+
+        customer.setUpdatedAt(LocalDateTime.now());
 
         Customer updated = customerRepository.save(customer);
         return customerMapper.toCustomerResponse(updated);

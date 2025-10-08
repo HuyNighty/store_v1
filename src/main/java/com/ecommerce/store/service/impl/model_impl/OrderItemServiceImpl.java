@@ -18,6 +18,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -61,6 +62,8 @@ public class OrderItemServiceImpl implements OrderItemService {
         if (newQuantity <= 0) throw new AppException(ErrorCode.INVALID_QUANTITY);
 
         orderItem.setQuantity(newQuantity);
+        orderItem.setUpdatedAt(LocalDateTime.now());
+
         orderItemRepository.save(orderItem);
         return orderItemMapper.toResponse(orderItem);
     }

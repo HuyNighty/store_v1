@@ -24,32 +24,38 @@ public class ReviewController {
 
     ReviewService reviewService;
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/products/{productId}")
     public ApiResponse<ReviewResponse> createReview(
             @PathVariable Integer productId,
             @RequestBody @Valid ReviewRequest request,
             @AuthenticationPrincipal Jwt jwt) {
-        return ApiResponse.<ReviewResponse>builder()
+        return ApiResponse
+                .<ReviewResponse>builder()
                 .result(reviewService.createReviewForUser(jwt, productId, request))
                 .build();
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PatchMapping("/{reviewId}")
     public ApiResponse<ReviewResponse> updateReview(
             @PathVariable Integer reviewId,
             @RequestBody ReviewUpdateRequest request,
             @AuthenticationPrincipal Jwt jwt) {
-        return ApiResponse.<ReviewResponse>builder()
+        return ApiResponse
+                .<ReviewResponse>builder()
                 .result(reviewService.updateReviewForUser(jwt, reviewId, request))
                 .build();
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @DeleteMapping("/{reviewId}")
     public ApiResponse<Void> deleteReview(
             @PathVariable Integer reviewId,
             @AuthenticationPrincipal Jwt jwt) {
         reviewService.deleteReviewForUser(jwt, reviewId);
-        return ApiResponse.<Void>builder()
+        return ApiResponse
+                .<Void>builder()
                 .code(200)
                 .message("Deleted review successfully")
                 .build();
@@ -58,32 +64,36 @@ public class ReviewController {
     @GetMapping("/me")
     public ApiResponse<List<ReviewResponse>> getMyReviews(
             @AuthenticationPrincipal Jwt jwt) {
-        return ApiResponse.<List<ReviewResponse>>builder()
+        return ApiResponse
+                .<List<ReviewResponse>>builder()
                 .result(reviewService.getReviewsForUser(jwt))
                 .build();
     }
 
-    @GetMapping("/products/{productId}")
     @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/products/{productId}")
     public ApiResponse<List<ReviewResponse>> getReviewsByProduct(@PathVariable Integer productId) {
-        return ApiResponse.<List<ReviewResponse>>builder()
+        return ApiResponse
+                .<List<ReviewResponse>>builder()
                 .result(reviewService.getReviewsByProduct(productId))
                 .build();
     }
 
-    @PatchMapping("/admin/{reviewId}/approve")
     @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/admin/{reviewId}/approve")
     public ApiResponse<ReviewResponse> approveReview(@PathVariable Integer reviewId) {
-        return ApiResponse.<ReviewResponse>builder()
+        return ApiResponse
+                .<ReviewResponse>builder()
                 .result(reviewService.approveReview(reviewId))
                 .build();
     }
 
-    @DeleteMapping("/admin/{reviewId}")
     @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/admin/{reviewId}")
     public ApiResponse<Void> deleteReviewAsAdmin(@PathVariable Integer reviewId) {
         reviewService.deleteReviewAsAdmin(reviewId);
-        return ApiResponse.<Void>builder()
+        return ApiResponse
+                .<Void>builder()
                 .code(200)
                 .message("Deleted review successfully")
                 .build();

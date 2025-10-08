@@ -24,21 +24,24 @@ public class BookAuthorController {
 
     @PostMapping
     public ApiResponse<BookAuthorResponse> create(@RequestBody BookAuthorRequest request) {
-        return ApiResponse.<BookAuthorResponse>builder()
+        return ApiResponse
+                .<BookAuthorResponse>builder()
                 .result(bookAuthorService.create(request))
                 .build();
     }
 
     @GetMapping
     public ApiResponse<List<BookAuthorResponse>> getAll() {
-        return ApiResponse.<List<BookAuthorResponse>>builder()
+        return ApiResponse
+                .<List<BookAuthorResponse>>builder()
                 .result(bookAuthorService.getAll())
                 .build();
     }
 
     @GetMapping("/search/{keyword}")
     public ApiResponse<List<BookAuthorResponse>> searchByAuthorName(@PathVariable String keyword) {
-        return ApiResponse.<List<BookAuthorResponse>>builder()
+        return ApiResponse
+                .<List<BookAuthorResponse>>builder()
                 .result(bookAuthorService.getByAuthorNameContaining(keyword))
                 .build();
     }
@@ -52,7 +55,8 @@ public class BookAuthorController {
         BookAuthorId id = new BookAuthorId(productId, authorId);
         BookAuthorResponse response = bookAuthorService.update(id, request);
 
-        return ApiResponse.<BookAuthorResponse>builder()
+        return ApiResponse
+                .<BookAuthorResponse>builder()
                 .code(200)
                 .result(response)
                 .build();
@@ -61,7 +65,8 @@ public class BookAuthorController {
     @DeleteMapping("/{productId}/{authorId}")
     public ApiResponse<Void> delete(@PathVariable Integer productId, @PathVariable Integer authorId) {
         bookAuthorService.delete(productId, authorId);
-        return ApiResponse.<Void>builder()
+        return ApiResponse
+                .<Void>builder()
                 .code(200)
                 .message("BookAuthor deleted successfully")
                 .build();

@@ -63,6 +63,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         productMapper.updateProductFromRequest(request, product);
+        product.setUpdatedAt(LocalDateTime.now());
 
         productRepository.save(product);
         return productMapper.toProductResponse(product);

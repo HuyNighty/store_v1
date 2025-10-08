@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -52,8 +53,13 @@ public class CartItemServiceImpl implements CartItemService {
     @Transactional
     public CartItemResponse updateItemQuantityForUser(Jwt jwt, Integer productId, Integer newQuantity) {
         Cart cart = getCartOfCurrentUser(jwt);
+
         CartItem cartItem = getCartItem(cart.getCartId(), productId);
+
         cartItem.setQuantity(newQuantity);
+
+        cartItem.setUpdatedAt(LocalDateTime.now());
+
         cartItemRepository.save(cartItem);
         return cartItemMapper.toResponse(cartItem);
     }
