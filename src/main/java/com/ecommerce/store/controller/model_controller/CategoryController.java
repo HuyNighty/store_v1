@@ -4,6 +4,7 @@ import com.ecommerce.store.dto.request.model_request.CategoryRequest;
 import com.ecommerce.store.dto.response.ApiResponse;
 import com.ecommerce.store.dto.response.model_response.CategoryResponse;
 import com.ecommerce.store.service.model_service.CategoryService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,7 +24,7 @@ public class CategoryController {
     CategoryService categoryService;
 
     @PostMapping
-    public ApiResponse<CategoryResponse> create(@RequestBody CategoryRequest request) {
+    public ApiResponse<CategoryResponse> create(@RequestBody @Valid CategoryRequest request) {
         return ApiResponse
                 .<CategoryResponse>builder()
                 .result(categoryService.create(request))

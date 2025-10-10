@@ -6,6 +6,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
 public record CategoryRequest(
+
         @PositiveOrZero(message = "Parent ID must be >= 0")
         Integer parentId,
 

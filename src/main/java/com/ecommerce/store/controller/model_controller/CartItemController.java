@@ -5,6 +5,7 @@ import com.ecommerce.store.dto.request.model_request.UpdateCartItemQuantityReque
 import com.ecommerce.store.dto.response.ApiResponse;
 import com.ecommerce.store.dto.response.model_response.CartItemResponse;
 import com.ecommerce.store.service.model_service.CartItemService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -28,7 +29,7 @@ public class CartItemController {
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/me/items")
     public ApiResponse<CartItemResponse> addItemToCartForUser(
-            @RequestBody CartItemRequest request,
+            @RequestBody @Valid CartItemRequest request,
             @AuthenticationPrincipal Jwt jwt) {
 
         return ApiResponse
@@ -41,7 +42,7 @@ public class CartItemController {
     @PatchMapping("/me/items/{productId}")
     public ApiResponse<CartItemResponse> updateItemQuantityForUser(
             @PathVariable Integer productId,
-            @RequestBody UpdateCartItemQuantityRequest request,
+            @RequestBody @Valid UpdateCartItemQuantityRequest request,
             @AuthenticationPrincipal Jwt jwt) {
 
         return ApiResponse

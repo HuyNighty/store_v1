@@ -4,6 +4,7 @@ import com.ecommerce.store.dto.request.model_request.RolePermissionRequest;
 import com.ecommerce.store.dto.response.ApiResponse;
 import com.ecommerce.store.dto.response.model_response.RolePermissionResponse;
 import com.ecommerce.store.service.model_service.RolePermissionService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,7 +24,7 @@ public class RolePermissionController {
 
     @PostMapping("/assign")
     public ApiResponse<RolePermissionResponse> assignPermission(
-            @RequestBody RolePermissionRequest request) {
+            @RequestBody @Valid RolePermissionRequest request) {
         return ApiResponse
                 .<RolePermissionResponse>builder()
                 .result(rolePermissionService.assignPermission(request))

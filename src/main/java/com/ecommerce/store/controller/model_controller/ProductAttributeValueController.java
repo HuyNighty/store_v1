@@ -5,6 +5,7 @@ import com.ecommerce.store.dto.response.ApiResponse;
 import com.ecommerce.store.dto.response.model_response.ProductAttributeValueResponse;
 import com.ecommerce.store.entity.key.ProductAttributeValueId;
 import com.ecommerce.store.service.model_service.ProductAttributeValueService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,7 +24,8 @@ public class ProductAttributeValueController {
     ProductAttributeValueService productAttributeValueService;
 
     @PostMapping
-    public ApiResponse<ProductAttributeValueResponse> create(@RequestBody ProductAttributeValueRequest request) {
+    public ApiResponse<ProductAttributeValueResponse> create(
+            @RequestBody @Valid ProductAttributeValueRequest request) {
         return ApiResponse
                 .<ProductAttributeValueResponse>builder()
                 .result(productAttributeValueService.create(request))

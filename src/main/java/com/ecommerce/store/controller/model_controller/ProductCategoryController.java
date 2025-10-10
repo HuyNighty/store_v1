@@ -4,6 +4,7 @@ import com.ecommerce.store.dto.request.model_request.ProductCategoryRequest;
 import com.ecommerce.store.dto.response.model_response.ProductCategoryResponse;
 import com.ecommerce.store.dto.response.ApiResponse;
 import com.ecommerce.store.service.model_service.ProductCategoryService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,7 +24,7 @@ public class ProductCategoryController {
 
     @PostMapping
     public ApiResponse<ProductCategoryResponse> assignProductToCategory(
-            @RequestBody ProductCategoryRequest request) {
+            @RequestBody @Valid ProductCategoryRequest request) {
         return ApiResponse
                 .<ProductCategoryResponse>builder()
                 .result(productCategoryService.assignProductToCategory(request))

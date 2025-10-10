@@ -5,6 +5,7 @@ import com.ecommerce.store.dto.response.ApiResponse;
 import com.ecommerce.store.dto.response.model_response.ProductAssetResponse;
 import com.ecommerce.store.enums.entity_enums.ProductAssetEnums.ProductAssetType;
 import com.ecommerce.store.service.model_service.ProductAssetService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -25,7 +26,7 @@ public class ProductAssetController {
     ProductAssetService productAssetService;
 
     @PostMapping
-    public ApiResponse<ProductAssetResponse> addAssetToProduct(@RequestBody ProductAssetRequest request) {
+    public ApiResponse<ProductAssetResponse> addAssetToProduct(@RequestBody @Valid ProductAssetRequest request) {
         return ApiResponse
                 .<ProductAssetResponse>builder()
                 .result(productAssetService.addAssetToProduct(request))

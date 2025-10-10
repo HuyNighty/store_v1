@@ -4,6 +4,7 @@ import com.ecommerce.store.dto.request.model_request.CouponRequest;
 import com.ecommerce.store.dto.response.ApiResponse;
 import com.ecommerce.store.dto.response.model_response.CouponResponse;
 import com.ecommerce.store.service.model_service.CouponService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,7 +23,7 @@ public class CouponController {
     CouponService couponService;
 
     @PostMapping
-    public ApiResponse<CouponResponse> create(@RequestBody CouponRequest request) {
+    public ApiResponse<CouponResponse> create(@RequestBody @Valid CouponRequest request) {
         return ApiResponse
                 .<CouponResponse>builder()
                 .result(couponService.createCoupon(request))

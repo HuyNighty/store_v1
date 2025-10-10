@@ -5,6 +5,7 @@ import com.ecommerce.store.dto.response.ApiResponse;
 import com.ecommerce.store.dto.response.model_response.BookAuthorResponse;
 import com.ecommerce.store.entity.key.BookAuthorId;
 import com.ecommerce.store.service.model_service.BookAuthorService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,7 +24,7 @@ public class BookAuthorController {
     BookAuthorService bookAuthorService;
 
     @PostMapping
-    public ApiResponse<BookAuthorResponse> create(@RequestBody BookAuthorRequest request) {
+    public ApiResponse<BookAuthorResponse> create(@RequestBody @Valid BookAuthorRequest request) {
         return ApiResponse
                 .<BookAuthorResponse>builder()
                 .result(bookAuthorService.create(request))
