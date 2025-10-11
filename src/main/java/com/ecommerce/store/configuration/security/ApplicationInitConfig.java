@@ -45,6 +45,14 @@ public class ApplicationInitConfig {
                                     .build()
                     ));
 
+            roleRepository.findByRoleNameIgnoreCase("GUEST")
+                    .orElseGet(() -> roleRepository.save(
+                            Role.builder()
+                                    .roleName("GUEST")
+                                    .description("Default guest role")
+                                    .build()
+                    ));
+
             userRepository.findByUserName("admin").orElseGet(() -> {
                 User user = User.builder()
                         .userName("admin")
