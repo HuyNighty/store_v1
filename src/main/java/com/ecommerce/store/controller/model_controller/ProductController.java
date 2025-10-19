@@ -30,7 +30,6 @@ public class ProductController {
                 .build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping("/{productId}")
     public ApiResponse<ProductResponse> getProductById(@PathVariable Integer productId) {
         return ApiResponse
@@ -39,7 +38,6 @@ public class ProductController {
                 .build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping
     public ApiResponse<List<ProductResponse>> getAllProducts() {
         return ApiResponse

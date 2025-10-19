@@ -12,8 +12,10 @@ import java.text.ParseException;
 
 public interface JwtService {
 
-    String generateToken(User user);
+    String generateAccessToken(User user);
+    String generateRefreshToken(User user);
     IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException;
     SignedJWT verifyToken(String token) throws ParseException, JOSEException;
     RefreshTokenResponse refreshToken(RefreshTokenRequest request) throws ParseException, JOSEException;
+    Long getRefreshDurationSeconds();
 }

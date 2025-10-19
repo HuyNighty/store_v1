@@ -44,6 +44,7 @@ public class AuthServiceImpl implements AuthService {
     UserRepository userRepository;
     RoleRepository roleRepository;
     UserRoleRepository userRoleRepository;
+    RefreshTokenRepository refreshTokenRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
     CartRepository cartRepository;
 
@@ -68,10 +69,24 @@ public class AuthServiceImpl implements AuthService {
         user.setLastLoginAt(LocalDateTime.now());
         userRepository.save(user);
 
-        String token = jwtService.generateToken(user);
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+
+        LocalDateTime expiry = LocalDateTime.now().plusSeconds(jwtService.getRefreshDurationSeconds());
+
+        RefreshToken rt = RefreshToken.builder()
+                .userId(user.getUserId())
+                .token(refreshToken)
+                .createdAt(LocalDateTime.now())
+                .expiredAt(expiry)
+                .build();
+
+        refreshTokenRepository.deleteByUserId(user.getUserId());
+        refreshTokenRepository.save(rt);
 
         LoginResponse response = authMapper.toLoginResponse(user, user.getCustomer());
-        response.setToken(token);
+        response.setToken(accessToken);
+        response.setRefreshToken(refreshToken);
 
         return response;
     }

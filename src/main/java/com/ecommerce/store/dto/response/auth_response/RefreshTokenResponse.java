@@ -11,4 +11,5 @@ public class RefreshTokenResponse {
 
     boolean success;
     String refreshToken;
+    String accessToken;
 }

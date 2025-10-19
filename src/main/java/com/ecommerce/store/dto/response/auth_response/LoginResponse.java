@@ -21,5 +21,6 @@ public class LoginResponse {
     LocalDateTime lastLoginAt;
     Integer loyaltyPoints;
     String token;
+    String refreshToken;
     Set<String> roles;
 }

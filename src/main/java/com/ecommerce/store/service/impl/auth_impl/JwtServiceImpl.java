@@ -9,6 +9,7 @@ import com.ecommerce.store.entity.User;
 import com.ecommerce.store.enums.error.ErrorCode;
 import com.ecommerce.store.exception.AppException;
 import com.ecommerce.store.repository.InvalidatedTokenRepository;
+import com.ecommerce.store.repository.RefreshTokenRepository;
 import com.ecommerce.store.repository.UserRepository;
 import com.ecommerce.store.service.auth_service.JwtService;
 import com.nimbusds.jose.*;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,6 +40,7 @@ public class JwtServiceImpl implements JwtService {
 
     InvalidatedTokenRepository invalidatedTokenRepository;
     UserRepository userRepository;
+    RefreshTokenRepository refreshTokenRepository;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -52,11 +55,9 @@ public class JwtServiceImpl implements JwtService {
     Long REFRESHABLE_DURATION;
 
     @Override
-    public String generateToken(User user) {
+    public String generateAccessToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS256);
-
-        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet
-                .Builder()
+        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getUserName())
                 .issuer("Store_Book")
                 .issueTime(new Date())
@@ -65,18 +66,21 @@ public class JwtServiceImpl implements JwtService {
                 .expirationTime(Date.from(Instant.now().plus(VALIDATION_DURATION, ChronoUnit.SECONDS)))
                 .jwtID(UUID.randomUUID().toString())
                 .build();
+        return signAndSerialize(header, jwtClaimsSet);
+    }
 
-        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
-
-        JWSObject jwsObject = new JWSObject(header, payload);
-
-        try {
-            jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
-            return jwsObject.serialize();
-        } catch (JOSEException e) {
-            log.error("Failed to sign JWT", e);
-            throw new RuntimeException("Unable to sign key");
-        }
+    @Override
+    public String generateRefreshToken(User user) {
+        JWSHeader header = new JWSHeader(JWSAlgorithm.HS256);
+        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
+                .subject(user.getUserName())
+                .issuer("Store_Book")
+                .issueTime(new Date())
+                .claim("id", user.getUserId())
+                .expirationTime(Date.from(Instant.now().plus(REFRESHABLE_DURATION, ChronoUnit.SECONDS)))
+                .jwtID(UUID.randomUUID().toString())
+                .build();
+        return signAndSerialize(header, jwtClaimsSet);
     }
 
     private String buildScope(User user) {
@@ -124,30 +128,38 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public RefreshTokenResponse refreshToken(RefreshTokenRequest request)
             throws ParseException, JOSEException {
+
         SignedJWT signedJWT = verifyToken(request.refreshToken());
 
-        String jti = signedJWT.getJWTClaimsSet().getJWTID();
+        String oldJti = signedJWT.getJWTClaimsSet().getJWTID();
         Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
-
-        InvalidatedToken invalidatedToken = InvalidatedToken
-                .builder()
-                .jti(jti)
-                .expiredAt(expiryTime)
-                .build();
-
+        InvalidatedToken invalidatedToken = InvalidatedToken.builder().jti(oldJti).expiredAt(expiryTime).build();
         invalidatedTokenRepository.save(invalidatedToken);
 
-        String userName = signedJWT.getJWTClaimsSet().getSubject();
-        User user = userRepository.findByUserName(userName)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String username = signedJWT.getJWTClaimsSet().getSubject();
+        User user = userRepository.findByUserName(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        String refreshToken = generateToken(user);
+        String newAccess = generateAccessToken(user);
+        String newRefresh = generateRefreshToken(user);
 
-        return RefreshTokenResponse
-                .builder()
+        refreshTokenRepository.findByToken(request.refreshToken()).ifPresent(old -> {
+            old.setToken(newRefresh);
+            old.setExpiredAt(LocalDateTime.now().plusSeconds(REFRESHABLE_DURATION));
+            refreshTokenRepository.save(old);
+        });
+
+        return RefreshTokenResponse.builder()
                 .success(true)
-                .refreshToken(refreshToken)
+                .refreshToken(newRefresh)
+                .accessToken(newAccess)
                 .build();
+    }
+
+
+
+    @Override
+    public Long getRefreshDurationSeconds() {
+        return REFRESHABLE_DURATION;
     }
 
     @Override
@@ -167,5 +179,17 @@ public class JwtServiceImpl implements JwtService {
                 .builder()
                 .verified(isValid)
                 .build();
+    }
+
+    private String signAndSerialize(JWSHeader header, JWTClaimsSet jwtClaimsSet) {
+        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
+        JWSObject jwsObject = new JWSObject(header, payload);
+        try {
+            jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
+            return jwsObject.serialize();
+        } catch (JOSEException e) {
+            log.error("Failed to sign JWT", e);
+            throw new RuntimeException("Unable to sign key");
+        }
     }
 }

@@ -62,6 +62,7 @@ public enum ErrorCode {
     CATEGORY_NOT_FOUND(1045, "Category not found", HttpStatus.NOT_FOUND),
     CATEGORY_ALREADY_EXISTS(1046, "Category already exists", HttpStatus.BAD_REQUEST),
     PRODUCT_CATEGORY_NOT_FOUND(1047, "Product category not found", HttpStatus.NOT_FOUND),
+    REFRESH_TOKEN_MISSING(1048, "Refresh token missing", HttpStatus.BAD_REQUEST),
     ;
     int code;
     String message;
