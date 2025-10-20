@@ -16,6 +16,7 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.SignedJWT;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -53,6 +54,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @Transactional
     public ApiResponse<LoginResponse> login(
             @RequestBody @Validated LoginRequest loginRequest,
             HttpServletResponse response) {
@@ -67,7 +69,7 @@ public class AuthController {
             ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                     .httpOnly(true)
                     .secure(false)
-                    .path("/api/auth/refresh")
+                    .path("/")
                     .maxAge(Duration.ofSeconds(jwtService.getRefreshDurationSeconds()))
                     .sameSite("Lax")
                     .build();
@@ -120,7 +122,7 @@ public class AuthController {
         ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
                 .httpOnly(true)
                 .secure(false) // true in prod with HTTPS
-                .path("/api/auth/refresh")
+                .path("/")
                 .maxAge(0)
                 .sameSite("Lax")
                 .build();
@@ -189,7 +191,7 @@ public class AuthController {
         ResponseCookie cookie = ResponseCookie.from("refreshToken", newRefreshToken)
                 .httpOnly(true)
                 .secure(false)
-                .path("/api/auth/refresh")
+                .path("/api/auth")
                 .maxAge(Duration.ofSeconds(jwtService.getRefreshDurationSeconds()))
                 .sameSite("Lax")
                 .build();
