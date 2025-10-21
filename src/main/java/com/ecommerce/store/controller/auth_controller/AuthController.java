@@ -168,7 +168,8 @@ public class AuthController {
             }
         }
 
-        return ApiResponse.<Void>builder()
+        return ApiResponse
+                .<Void>builder()
                 .code(200)
                 .message("Logout successfully!!!")
                 .build();
