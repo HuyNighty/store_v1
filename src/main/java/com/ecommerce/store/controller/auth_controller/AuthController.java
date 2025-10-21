@@ -170,7 +170,7 @@ public class AuthController {
 
         return ApiResponse.<Void>builder()
                 .code(200)
-                .message("Logout successfully!and!")
+                .message("Logout successfully!")
                 .build();
     }
 
