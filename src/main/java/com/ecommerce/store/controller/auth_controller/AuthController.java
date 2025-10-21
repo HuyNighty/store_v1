@@ -170,7 +170,9 @@ public class AuthController {
 
         return ApiResponse.<Void>builder()
                 .code(200)
+ signup_feature
                 .message("Logout successfully! or " + "No active session found.")
+
                 .build();
     }
 
