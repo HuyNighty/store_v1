@@ -40,7 +40,7 @@ public class User extends BaseTimeEntity {
     LocalDateTime lastLoginAt;
 
     @Version
-    Integer version;
+    Integer version ;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     Customer customer;

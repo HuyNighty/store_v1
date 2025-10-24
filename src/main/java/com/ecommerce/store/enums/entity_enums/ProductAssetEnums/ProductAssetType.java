@@ -6,5 +6,6 @@ public enum ProductAssetType {
     GALLERY,
     MANUAL,
     THUMBNAIL,
-    PREVIEW
+    PREVIEW,
+    COVER
 }

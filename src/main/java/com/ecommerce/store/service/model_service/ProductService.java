@@ -12,4 +12,5 @@ public interface ProductService {
     ProductResponse getProductById(Integer productId);
     List<ProductResponse> getAllProducts();
     List<ProductResponse> searchProducts(String keyword);
+
 }

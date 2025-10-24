@@ -54,18 +54,19 @@ public enum ErrorCode {
     AUTHOR_EXISTED(1037, "Author existed", HttpStatus.BAD_REQUEST),
     AUTHOR_NOT_FOUND(1038, "Author not found", HttpStatus.NOT_FOUND),
     BOOK_AUTHOR_NOT_FOUND(1039, "Book author not found", HttpStatus.NOT_FOUND),
-    DUPLICATE_ATTRIBUTE_NAME(1040, "Duplicate attribute name", HttpStatus.BAD_REQUEST),
-    ATTRIBUTE_NOT_FOUND(1041, "Attribute not found", HttpStatus.NOT_FOUND),
-    PRODUCT_ATTRIBUTE_VALUE_NOT_FOUND(1042, "Product attribute value not found", HttpStatus.NOT_FOUND),
-    INVALID_ATTRIBUTE_VALUE(1043, "Invalid attribute value", HttpStatus.BAD_REQUEST),
-    INVALID_ATTRIBUTE_TYPE(1044, "Invalid attribute type", HttpStatus.BAD_REQUEST),
-    CATEGORY_NOT_FOUND(1045, "Category not found", HttpStatus.NOT_FOUND),
-    CATEGORY_ALREADY_EXISTS(1046, "Category already exists", HttpStatus.BAD_REQUEST),
-    PRODUCT_CATEGORY_NOT_FOUND(1047, "Product category not found", HttpStatus.NOT_FOUND),
-    REFRESH_TOKEN_MISSING(1048, "Refresh token missing", HttpStatus.BAD_REQUEST),
+    BOOK_AUTHOR_EXISTED(1040, "Book author relationship already exists", HttpStatus.BAD_REQUEST),
+    DUPLICATE_ATTRIBUTE_NAME(1041, "Duplicate attribute name", HttpStatus.BAD_REQUEST),
+    ATTRIBUTE_NOT_FOUND(1042, "Attribute not found", HttpStatus.NOT_FOUND),
+    PRODUCT_ATTRIBUTE_VALUE_NOT_FOUND(1043, "Product attribute value not found", HttpStatus.NOT_FOUND),
+    INVALID_ATTRIBUTE_VALUE(1044, "Invalid attribute value", HttpStatus.BAD_REQUEST),
+    INVALID_ATTRIBUTE_TYPE(1045, "Invalid attribute type", HttpStatus.BAD_REQUEST),
+    CATEGORY_NOT_FOUND(1046, "Category not found", HttpStatus.NOT_FOUND),
+    CATEGORY_ALREADY_EXISTS(1047, "Category already exists", HttpStatus.BAD_REQUEST),
+    PRODUCT_CATEGORY_NOT_FOUND(1048, "Product category not found", HttpStatus.NOT_FOUND),
+    REFRESH_TOKEN_MISSING(1049, "Refresh token missing", HttpStatus.BAD_REQUEST),
+    CREATE_BOOK_FAILED(1050, "Create book failed", HttpStatus.BAD_REQUEST),
     ;
     int code;
     String message;
     HttpStatusCode httpStatusCode;
-
 }

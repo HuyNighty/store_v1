@@ -95,15 +95,19 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductResponse> getAllProducts() {
          return productRepository.findAll().stream()
-                 .filter(p -> p.getDeletedAt() == null && Boolean.TRUE.equals(p.getIsActive()))
                  .map(productMapper::toProductResponse)
                  .toList();
     }
 
     @Override
     public List<ProductResponse> searchProducts(String keyword) {
-        return productRepository.findByProductNameContainingIgnoreCase(keyword).stream()
-                .filter(p -> p.getDeletedAt() == null && Boolean.TRUE.equals(p.getIsActive()))
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return List.of();
+        }
+
+        return productRepository.findByProductNameContainingIgnoreCase(keyword.trim())
+                .stream()
+                .filter(p -> Boolean.TRUE.equals(p.getIsActive()))
                 .map(productMapper::toProductResponse)
                 .toList();
     }

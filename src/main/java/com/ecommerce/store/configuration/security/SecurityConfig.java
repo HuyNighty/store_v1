@@ -67,6 +67,13 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.PATCH, "/api/products/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
 
+                                .requestMatchers(HttpMethod.GET, "/api/assets/**").permitAll()
+
+                                // other asset ops only admin
+                                .requestMatchers(HttpMethod.POST, "/api/assets/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PATCH, "/api/assets/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/api/assets/**").hasRole("ADMIN")
+
                                 // fallback
                                 .anyRequest().authenticated()
                 )

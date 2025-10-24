@@ -7,5 +7,4 @@ public record RegisterResponse(
         String fullName,
         String phoneNumber,
         String address
-) {
-}
+) {}

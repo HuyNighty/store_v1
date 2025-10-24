@@ -25,7 +25,7 @@ public class AssetController {
 
     AssetService assetService;
 
-    @PostMapping("/upload")
+    @PostMapping
     public ApiResponse<AssetResponse> uploadAsset(@RequestBody @Valid AssetRequest request) {
         return ApiResponse
                 .<AssetResponse>builder()

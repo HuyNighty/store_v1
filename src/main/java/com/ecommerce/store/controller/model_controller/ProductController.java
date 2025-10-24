@@ -67,4 +67,12 @@ public class ProductController {
                 .message("Delete Product successfully")
                 .build();
     }
+
+    @GetMapping("/search")
+    public ApiResponse<List<ProductResponse>> searchProducts(@RequestParam("keyword") String keyword) {
+        return ApiResponse
+                .<List<ProductResponse>>builder()
+                .result(productService.searchProducts(keyword))
+                .build();
+    }
 }
