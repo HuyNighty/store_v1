@@ -10,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -32,10 +33,19 @@ public class CartItemController {
             @RequestBody @Valid CartItemRequest request,
             @AuthenticationPrincipal Jwt jwt) {
 
-        return ApiResponse
-                .<CartItemResponse>builder()
-                .result(cartItemService.addItemToCartForUser(jwt, request))
-                .build();
+        try {
+            CartItemResponse result = cartItemService.addItemToCartForUser(jwt, request);
+            return ApiResponse.<CartItemResponse>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("Item added to cart successfully")
+                    .result(result)
+                    .build();
+        } catch (Exception e) {
+            return ApiResponse.<CartItemResponse>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("Failed to add item to cart: " + e.getMessage())
+                    .build();
+        }
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -45,10 +55,19 @@ public class CartItemController {
             @RequestBody @Valid UpdateCartItemQuantityRequest request,
             @AuthenticationPrincipal Jwt jwt) {
 
-        return ApiResponse
-                .<CartItemResponse>builder()
-                .result(cartItemService.updateItemQuantityForUser(jwt, productId, request.quantity()))
-                .build();
+        try {
+            CartItemResponse result = cartItemService.updateItemQuantityForUser(jwt, productId, request.quantity());
+            return ApiResponse.<CartItemResponse>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("Cart item quantity updated successfully")
+                    .result(result)
+                    .build();
+        } catch (Exception e) {
+            return ApiResponse.<CartItemResponse>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("Failed to update cart item: " + e.getMessage())
+                    .build();
+        }
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -57,31 +76,97 @@ public class CartItemController {
             @PathVariable Integer productId,
             @AuthenticationPrincipal Jwt jwt) {
 
-        cartItemService.removeItemFromCartForUser(jwt, productId);
-        return ApiResponse
-                .<Void>builder()
-                .code(200)
-                .message("Removed item from cart successfully")
-                .build();
+        try {
+            cartItemService.removeItemFromCartForUser(jwt, productId);
+            return ApiResponse.<Void>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("Item removed from cart successfully")
+                    .build();
+        } catch (Exception e) {
+            return ApiResponse.<Void>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("Failed to remove item from cart: " + e.getMessage())
+                    .build();
+        }
     }
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/me/items")
     public ApiResponse<List<CartItemResponse>> getItemsForUser(@AuthenticationPrincipal Jwt jwt) {
 
-        return ApiResponse
-                .<List<CartItemResponse>>builder()
-                .result(cartItemService.getItemsForUser(jwt))
-                .build();
+        try {
+            List<CartItemResponse> result = cartItemService.getItemsForUser(jwt);
+            return ApiResponse.<List<CartItemResponse>>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("Cart items retrieved successfully")
+                    .result(result)
+                    .build();
+        } catch (Exception e) {
+            return ApiResponse.<List<CartItemResponse>>builder()
+                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                    .message("Failed to retrieve cart items: " + e.getMessage())
+                    .build();
+        }
     }
+
+    @PreAuthorize("hasRole('USER')")
+    @DeleteMapping("/me/clear")
+    public ApiResponse<Void> clearCartForUser(@AuthenticationPrincipal Jwt jwt) {
+
+        try {
+            cartItemService.clearCartForUser(jwt);
+            return ApiResponse.<Void>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("Cart cleared successfully")
+                    .build();
+        } catch (Exception e) {
+            return ApiResponse.<Void>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("Failed to clear cart: " + e.getMessage())
+                    .build();
+        }
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/me/items/count")
+    public ApiResponse<Integer> getCartItemCountForUser(@AuthenticationPrincipal Jwt jwt) {
+
+        try {
+            List<CartItemResponse> cartItems = cartItemService.getItemsForUser(jwt);
+            int totalCount = cartItems.stream()
+                    .mapToInt(CartItemResponse::quantity)
+                    .sum();
+            return ApiResponse.<Integer>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("Cart item count retrieved successfully")
+                    .result(totalCount)
+                    .build();
+        } catch (Exception e) {
+            return ApiResponse.<Integer>builder()
+                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                    .message("Failed to retrieve cart item count: " + e.getMessage())
+                    .build();
+        }
+    }
+
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin/{cartId}/items")
     public ApiResponse<List<CartItemResponse>> getItemsByCartId(@PathVariable Integer cartId) {
-        return ApiResponse
-                .<List<CartItemResponse>>builder()
-                .result(cartItemService.getItemsByCartId(cartId))
-                .build();
+
+        try {
+            List<CartItemResponse> result = cartItemService.getItemsByCartId(cartId);
+            return ApiResponse.<List<CartItemResponse>>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("Cart items retrieved successfully")
+                    .result(result)
+                    .build();
+        } catch (Exception e) {
+            return ApiResponse.<List<CartItemResponse>>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("Failed to retrieve cart items: " + e.getMessage())
+                    .build();
+        }
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -90,11 +175,38 @@ public class CartItemController {
             @PathVariable Integer cartId,
             @PathVariable Integer productId) {
 
-        cartItemService.removeItemFromCart(cartId, productId);
-        return ApiResponse
-                .<Void>builder()
-                .code(200)
-                .message("Removed item from cart successfully")
-                .build();
+        try {
+            cartItemService.removeItemFromCart(cartId, productId);
+            return ApiResponse.<Void>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("Item removed from cart successfully")
+                    .build();
+        } catch (Exception e) {
+            return ApiResponse.<Void>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("Failed to remove item from cart: " + e.getMessage())
+                    .build();
+        }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/admin/{cartId}/clear")
+    public ApiResponse<Void> clearCartByAdmin(@PathVariable Integer cartId) {
+
+        try {
+            List<CartItemResponse> items = cartItemService.getItemsByCartId(cartId);
+            for (CartItemResponse item : items) {
+                cartItemService.removeItemFromCart(cartId, item.productId());
+            }
+            return ApiResponse.<Void>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("Cart cleared successfully")
+                    .build();
+        } catch (Exception e) {
+            return ApiResponse.<Void>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("Failed to clear cart: " + e.getMessage())
+                    .build();
+        }
     }
 }

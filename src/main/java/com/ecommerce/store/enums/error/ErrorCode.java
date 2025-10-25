@@ -65,6 +65,8 @@ public enum ErrorCode {
     PRODUCT_CATEGORY_NOT_FOUND(1048, "Product category not found", HttpStatus.NOT_FOUND),
     REFRESH_TOKEN_MISSING(1049, "Refresh token missing", HttpStatus.BAD_REQUEST),
     CREATE_BOOK_FAILED(1050, "Create book failed", HttpStatus.BAD_REQUEST),
+    CART_ITEM_REMOVED(1051, "Cart item removed", HttpStatus.BAD_REQUEST),
+    INSUFFICIENT_STOCK(1052, "Insufficient stock", HttpStatus.BAD_REQUEST),
     ;
     int code;
     String message;
