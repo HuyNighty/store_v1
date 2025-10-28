@@ -67,6 +67,7 @@ public enum ErrorCode {
     CREATE_BOOK_FAILED(1050, "Create book failed", HttpStatus.BAD_REQUEST),
     CART_ITEM_REMOVED(1051, "Cart item removed", HttpStatus.BAD_REQUEST),
     INSUFFICIENT_STOCK(1052, "Insufficient stock", HttpStatus.BAD_REQUEST),
+    CUSTOMER_NOT_FOUND(1053, "Customer not found", HttpStatus.NOT_FOUND),
     ;
     int code;
     String message;

@@ -3,9 +3,7 @@ package com.ecommerce.store.service.impl.auth_impl;
 import com.ecommerce.store.dto.request.auth_request.LoginRequest;
 import com.ecommerce.store.dto.request.auth_request.LogoutRequest;
 import com.ecommerce.store.dto.request.auth_request.RegisterRequest;
-import com.ecommerce.store.dto.response.auth_response.LoginResponse;
-import com.ecommerce.store.dto.response.auth_response.RegisterResponse;
-import com.ecommerce.store.dto.response.auth_response.UserInfoResponse;
+import com.ecommerce.store.dto.response.auth_response.*;
 import com.ecommerce.store.entity.*;
 import com.ecommerce.store.entity.*;
 import com.ecommerce.store.entity.key.UserRoleId;
@@ -47,6 +45,7 @@ public class AuthServiceImpl implements AuthService {
     RefreshTokenRepository refreshTokenRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
     CartRepository cartRepository;
+    CustomerRepository customerRepository;
 
     AuthMapper authMapper;
 
@@ -173,4 +172,23 @@ public class AuthServiceImpl implements AuthService {
         return authMapper.toRegisterResponse(user, customer);
     }
 
+    @Override
+    public MyInfoResponse myInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+
+        String userName = authentication.getName();
+
+        User user = userRepository.findByUserName(userName).orElseThrow(() ->
+                new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        Customer customer = customerRepository.findByUser_UserName(userName).orElseThrow(() ->
+                new AppException(ErrorCode.CUSTOMER_NOT_FOUND)); // Tạo ErrorCode mới
+
+        MyInfoSource myInfoSource = new MyInfoSource(user, customer);
+        return authMapper.toMyInfoResponse(myInfoSource);
+    }
 }

@@ -1,9 +1,7 @@
 package com.ecommerce.store.mapper.auth_map;
 
 import com.ecommerce.store.dto.request.auth_request.RegisterRequest;
-import com.ecommerce.store.dto.response.auth_response.LoginResponse;
-import com.ecommerce.store.dto.response.auth_response.RegisterResponse;
-import com.ecommerce.store.dto.response.auth_response.UserInfoResponse;
+import com.ecommerce.store.dto.response.auth_response.*;
 import com.ecommerce.store.entity.Customer;
 import com.ecommerce.store.entity.User;
 import org.mapstruct.Mapper;
@@ -35,6 +33,15 @@ public interface AuthMapper {
     @Mapping(expression = "java(getLoyaltyPoints(customer))", target = "loyaltyPoints")
     @Mapping(expression = "java(getRoles(user))", target = "roles")
     UserInfoResponse toUserInfoResponse(User user, Customer customer);
+
+    @Mapping(source = "user.userName", target = "userName")
+    @Mapping(source = "customer.firstName", target = "firstName")
+    @Mapping(source = "customer.lastName", target = "lastName")
+    @Mapping(source = "customer.phoneNumber", target = "phoneNumber")
+    @Mapping(source = "customer.address", target = "address")
+    @Mapping(source = "user.email", target = "email")
+    @Mapping(source = "customer.loyaltyPoints", target = "loyaltyPoints")
+    MyInfoResponse toMyInfoResponse(MyInfoSource source);
 
     default Set<String> getRoles(User user) {
         if (user.getUserRoles() == null) return Set.of();

@@ -206,4 +206,12 @@ public class AuthController {
                 .result(out)
                 .build();
     }
+
+    @GetMapping("/my-info")
+    public ApiResponse<MyInfoResponse> myInfo() {
+        return ApiResponse
+                .<MyInfoResponse>builder()
+                .result(authService.myInfo())
+                .build();
+    }
 }
