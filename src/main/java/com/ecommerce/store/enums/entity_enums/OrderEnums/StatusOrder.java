@@ -5,6 +5,6 @@ public enum StatusOrder {
     PAID,
     SHIPPED,
     DELIVERED,
-    CANCELED,
+    CANCELLED,
     COMPLETED,
 }

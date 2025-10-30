@@ -30,45 +30,32 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public AssetResponse createAsset(AssetRequest request) {
-        log.info("🎯 Creating asset with request: {}", request);
-
         try {
-            // Log chi tiết từng field
             log.debug("Asset request details - URL: {}, Type: {}, FileName: {}, MimeType: {}, Width: {}, Height: {}, SizeBytes: {}",
                     request.url(), request.type(), request.fileName(), request.mimeType(),
                     request.width(), request.height(), request.sizeBytes());
 
             if (assetRepository.existsByUrl(request.url())) {
-                log.warn("❌ URL already exists: {}", request.url());
                 throw new AppException(ErrorCode.URL_EXISTED);
             }
 
-            log.debug("📦 Mapping request to entity...");
             Asset asset = assetMapper.toEntity(request);
-            log.debug("✅ Entity mapped: {}", asset);
 
             asset.setCreatedAt(LocalDateTime.now());
 
-            log.debug("💾 Saving asset to database...");
             Asset savedAsset = assetRepository.save(asset);
-            log.info("✅ Asset saved successfully with ID: {}", savedAsset.getAssetId());
 
             AssetResponse response = assetMapper.toAssetResponse(savedAsset);
-            log.debug("✅ Response prepared: {}", response);
 
             return response;
 
         } catch (Exception e) {
-            log.error("💥 ERROR creating asset: ", e);
-            log.error("💥 Exception type: {}", e.getClass().getName());
-            log.error("💥 Exception message: {}", e.getMessage());
 
-            // Log stack trace đầy đủ
             if (e.getCause() != null) {
-                log.error("💥 Root cause: {}", e.getCause().getMessage());
+                log.error("Root cause: {}", e.getCause().getMessage());
             }
 
-            throw e; // Re-throw để Spring xử lý
+            throw e;
         }
     }
 

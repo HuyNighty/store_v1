@@ -55,6 +55,18 @@ public class OrderController {
     }
 
     @PreAuthorize("hasRole('USER')")
+    @DeleteMapping("/me/{orderId}")
+    public ApiResponse<Void> deleteOrder(@AuthenticationPrincipal Jwt jwt,
+                                         @PathVariable Integer orderId) {
+        orderService.deleteOrder(jwt, orderId);
+        return ApiResponse
+                .<Void>builder()
+                .code(200)
+                .message("Order has been deleted successfully")
+                .build();
+    }
+
+    @PreAuthorize("hasRole('USER')")
     @PatchMapping("/me/cancel/orders/{orderId}")
     public ApiResponse<Void> cancelOrder(@AuthenticationPrincipal Jwt jwt,
                                      @PathVariable Integer orderId) {
@@ -102,6 +114,17 @@ public class OrderController {
         return ApiResponse
                 .<List<OrderResponse>>builder()
                 .result(orderService.getOrdersByUserId(userId))
+                .build();
+    }
+
+    @DeleteMapping("/admin/{orderId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse<Void> adminDeleteOrder(@PathVariable Integer orderId) {
+        orderService.adminDeleteOrder(orderId);
+        return ApiResponse
+                .<Void>builder()
+                .code(200)
+                .message("Order has been deleted successfully")
                 .build();
     }
 }

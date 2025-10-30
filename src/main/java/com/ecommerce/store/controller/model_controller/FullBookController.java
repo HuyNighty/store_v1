@@ -30,7 +30,8 @@ public class FullBookController {
             @RequestBody @Valid FullBookRequest request) {
         FullBookResponse result = fullBookService.createFullBook(request);
 
-        return ApiResponse.<FullBookResponse>builder()
+        return ApiResponse
+                .<FullBookResponse>builder()
                 .result(result)
                 .message("Book created successfully with all related entities")
                 .build();

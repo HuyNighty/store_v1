@@ -108,7 +108,7 @@ public class OrderServiceImpl implements OrderService {
                 order.setCompletedAt(LocalDateTime.now());
                 order.getOrderItems().forEach(item -> item.setDeletedAt(LocalDateTime.now()));
             }
-            case CANCELED -> {
+            case CANCELLED -> {
                 order.setCanceledAt(LocalDateTime.now());
                 order.getOrderItems().forEach(item -> item.setDeletedAt(LocalDateTime.now()));
             }
@@ -143,7 +143,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findByOrderIdAndUserUserId(orderId, userId)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
 
-        if (order.getStatusOrder() == StatusOrder.CANCELED ||
+        if (order.getStatusOrder() == StatusOrder.CANCELLED ||
                 order.getStatusOrder() == StatusOrder.COMPLETED) {
             throw new AppException(ErrorCode.CANCELED_INVALID);
         }
@@ -151,7 +151,7 @@ public class OrderServiceImpl implements OrderService {
         if (order.getStatusOrder() == StatusOrder.PENDING ||
                 order.getStatusOrder() == StatusOrder.PAID) {
 
-            order.setStatusOrder(StatusOrder.CANCELED);
+            order.setStatusOrder(StatusOrder.CANCELLED);
             order.setCanceledAt(LocalDateTime.now());
 
             order.getOrderItems().forEach(item -> item.setDeletedAt(LocalDateTime.now()));
@@ -161,6 +161,22 @@ public class OrderServiceImpl implements OrderService {
             throw new AppException(ErrorCode.CANCELED_INVALID);
         }
     }
+
+    @Override
+    public void adminDeleteOrder(Integer orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+
+        order.setDeletedAt(LocalDateTime.now());
+        order.getOrderItems().forEach(item -> {
+            if (item.getDeletedAt() == null) {
+                item.setDeletedAt(LocalDateTime.now());
+            }
+        });
+
+        orderRepository.save(order);
+    }
+
 
     @Override
     public List<OrderResponse> getMyOrders(Jwt jwt) {
@@ -179,14 +195,35 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.toOrderResponse(oder);
     }
 
+    @Override
+    public void deleteOrder(Jwt jwt, Integer orderId) {
+        String userId = jwt.getClaimAsString("id");
+
+        Order order = orderRepository.findByOrderIdAndUserUserId(orderId, userId)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+
+        if (order.getStatusOrder() != StatusOrder.CANCELLED) {
+            throw new AppException(ErrorCode.DELETE_ORDER_INVALID);
+        }
+
+        order.setDeletedAt(LocalDateTime.now());
+        order.getOrderItems().forEach(item -> {
+            if (item.getDeletedAt() == null) {
+                item.setDeletedAt(LocalDateTime.now());
+            }
+        });
+
+        orderRepository.save(order);
+    }
+
     public void validateStatusTransition(StatusOrder current, StatusOrder next) {
         switch (current) {
             case PENDING -> {
-                if (next != StatusOrder.PAID && next != StatusOrder.CANCELED)
+                if (next != StatusOrder.PAID && next != StatusOrder.CANCELLED)
                     throw new AppException(ErrorCode.INVALID_STATUS_TRANSITION);
             }
             case PAID -> {
-                if (next != StatusOrder.SHIPPED && next != StatusOrder.CANCELED)
+                if (next != StatusOrder.SHIPPED && next != StatusOrder.CANCELLED)
                     throw new AppException(ErrorCode.INVALID_STATUS_TRANSITION);
             }
             case SHIPPED -> {
@@ -197,7 +234,7 @@ public class OrderServiceImpl implements OrderService {
                 if (next != StatusOrder.COMPLETED)
                     throw new AppException(ErrorCode.INVALID_STATUS_TRANSITION);
             }
-            case COMPLETED, CANCELED -> {
+            case COMPLETED, CANCELLED -> {
                 throw new AppException(ErrorCode.ORDER_ALREADY_FINALIZED);
             }
             default -> throw new AppException(ErrorCode.INVALID_STATUS_TRANSITION);

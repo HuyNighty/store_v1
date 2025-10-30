@@ -186,7 +186,7 @@ public class AuthServiceImpl implements AuthService {
                 new AppException(ErrorCode.USER_NOT_EXISTED));
 
         Customer customer = customerRepository.findByUser_UserName(userName).orElseThrow(() ->
-                new AppException(ErrorCode.CUSTOMER_NOT_FOUND)); // Tạo ErrorCode mới
+                new AppException(ErrorCode.CUSTOMER_NOT_FOUND));
 
         MyInfoSource myInfoSource = new MyInfoSource(user, customer);
         return authMapper.toMyInfoResponse(myInfoSource);

@@ -1,12 +1,9 @@
 package com.ecommerce.store.entity;
 
-import com.ecommerce.store.entity.base.BaseTimeEntity;
+import com.ecommerce.store.entity.base.BaseSoftDeleteEntity;
 import com.ecommerce.store.enums.entity_enums.OrderEnums.PaymentMethod;
 import com.ecommerce.store.enums.entity_enums.OrderEnums.StatusOrder;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -22,7 +19,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "orders")
-public class Order extends BaseTimeEntity {
+public class Order extends BaseSoftDeleteEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

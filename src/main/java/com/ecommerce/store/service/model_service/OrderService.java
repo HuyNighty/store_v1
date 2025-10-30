@@ -15,6 +15,8 @@ public interface OrderService {
 
     OrderResponse getOrderById(Jwt jwt, Integer orderId);
 
+    void deleteOrder(Jwt jwt, Integer orderId);
+
     List<OrderResponse> getAllOrders();
 
     OrderResponse updateStatus(Integer orderId, UpdateStatusOrderRequest request);
@@ -24,4 +26,6 @@ public interface OrderService {
     List<OrderResponse> getOrdersByUserId(String userId);
 
     void cancelOrder(Jwt jwt, Integer orderId);
+
+    void adminDeleteOrder(Integer orderId);
 }
