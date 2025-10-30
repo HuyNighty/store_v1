@@ -127,4 +127,23 @@ public class OrderController {
                 .message("Order has been deleted successfully")
                 .build();
     }
+
+    @GetMapping("/admin/{orderId}/details")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse<OrderResponse> getOrderDetailsAdmin(@PathVariable Integer orderId) {
+        return ApiResponse
+                .<OrderResponse>builder()
+                .result(orderService.getOrderDetailsAdmin(orderId))
+                .build();
+    }
+
+    @GetMapping("/{orderId}/details")
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse<OrderResponse> getOrderDetailsUser(@PathVariable Integer orderId) {
+        return ApiResponse
+                .<OrderResponse>builder()
+                .result(orderService.getOrderDetailsUser(orderId))
+                .build();
+    }
+
 }

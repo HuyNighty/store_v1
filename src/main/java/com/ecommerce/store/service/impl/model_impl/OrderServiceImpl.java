@@ -240,4 +240,28 @@ public class OrderServiceImpl implements OrderService {
             default -> throw new AppException(ErrorCode.INVALID_STATUS_TRANSITION);
         }
     }
+
+    @Override
+    public OrderResponse getOrderDetailsAdmin(Integer orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+
+        if (order.getDeletedAt() != null) {
+            throw new AppException(ErrorCode.ORDER_NOT_FOUND);
+        }
+
+        return orderMapper.toOrderResponse(order);
+    }
+
+    @Override
+    public OrderResponse getOrderDetailsUser(Integer orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+
+        if (order.getDeletedAt() != null) {
+            throw new AppException(ErrorCode.ORDER_NOT_FOUND);
+        }
+
+        return orderMapper.toOrderResponse(order);
+    }
 }

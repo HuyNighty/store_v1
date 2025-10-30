@@ -28,4 +28,8 @@ public interface OrderService {
     void cancelOrder(Jwt jwt, Integer orderId);
 
     void adminDeleteOrder(Integer orderId);
+
+    OrderResponse getOrderDetailsAdmin(Integer orderId);
+
+    OrderResponse getOrderDetailsUser(Integer orderId);
 }

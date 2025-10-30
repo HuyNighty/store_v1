@@ -87,6 +87,12 @@ public class OrderItemServiceImpl implements OrderItemService {
         return orderItemMapper.toResponseList(orderItemRepository.findByOrderOrderId(order.getOrderId()));
     }
 
+    @Override
+    public List<OrderItemResponse> getItemsByOrderAdmin(Integer orderId) {
+        List<OrderItem> orderItems = orderItemRepository.findByOrderOrderId(orderId);
+        return orderItemMapper.toResponseList(orderItems);
+    }
+
     private Order getOrderOfCurrentUser(Jwt jwt, Integer orderId) {
         String userId = jwt.getClaimAsString("id");
         return orderRepository.findByOrderIdAndUserUserId(orderId, userId)
