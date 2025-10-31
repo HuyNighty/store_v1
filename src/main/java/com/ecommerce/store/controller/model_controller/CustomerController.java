@@ -46,4 +46,12 @@ public class CustomerController {
                 .result(customerService.updateCustomer(customerId, request))
                 .build();
     }
+
+    @GetMapping("/by-user/{userId}")
+    public ApiResponse<CustomerResponse> getCustomerByUserId(@PathVariable String userId) {
+        return ApiResponse
+                .<CustomerResponse>builder()
+                .result(customerService.getCustomerByUserId(userId))
+                .build();
+    }
 }

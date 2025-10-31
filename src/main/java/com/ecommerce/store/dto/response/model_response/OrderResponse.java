@@ -20,6 +20,7 @@ public record OrderResponse(
         LocalDateTime completedAt,
         LocalDateTime deliveredAt,
         String userId,
+        String customerId,
         String fullName,
         List<OrderItemResponse> orderItems
 ) {

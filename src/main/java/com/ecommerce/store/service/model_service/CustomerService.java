@@ -10,4 +10,5 @@ public interface CustomerService {
     CustomerResponse updateCustomer(String customerId, CustomerRequest request);
     CustomerResponse getCustomerById(String customerId);
     List<CustomerResponse> getAllCustomers();
+    CustomerResponse getCustomerByUserId(String userId);
 }

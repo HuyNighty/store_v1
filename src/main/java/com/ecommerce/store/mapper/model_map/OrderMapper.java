@@ -11,6 +11,7 @@ import org.mapstruct.Mapping;
 public interface OrderMapper {
 
     @Mapping(source = "user.userId", target = "userId")
+    @Mapping(source = "user.customer.customerId", target = "customerId")
     @Mapping(expression = "java(fullName(order.getUser().getCustomer()))", target = "fullName")
     @Mapping(source = "orderItems", target = "orderItems")
     OrderResponse  toOrderResponse(Order order);

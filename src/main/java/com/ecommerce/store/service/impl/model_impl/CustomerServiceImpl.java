@@ -74,4 +74,11 @@ public class CustomerServiceImpl implements CustomerService {
                 .map(customerMapper::toCustomerResponse)
                 .toList();
     }
+
+    @Override
+    public CustomerResponse getCustomerByUserId(String userId) {
+        Customer customer = customerRepository.findByUserUserId(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.CUSTOMER_NOT_FOUND));
+        return customerMapper.toCustomerResponse(customer);
+    }
 }
