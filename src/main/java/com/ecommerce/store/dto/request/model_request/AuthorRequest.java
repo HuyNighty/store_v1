@@ -23,5 +23,8 @@ public record AuthorRequest(
         Nationality nationality,
 
         @NotNull
-        Integer assetId
+        Integer assetId,
+
+        String portraitUrl,
+        String wikiUrl
 ) {}

@@ -4,14 +4,19 @@ import com.ecommerce.store.enums.entity_enums.AuthorEnums.Nationality;
 import lombok.Builder;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Builder
-public record AuthorResponse(
+public record AuthorDetailResponse(
         Integer authorId,
         String authorName,
         String bio,
         LocalDate bornDate,
         LocalDate deathDate,
         Nationality nationality,
-        Integer assetId
+        String portraitUrl,
+        String wikiUrl,
+        Integer totalBooks,
+        Double averageRating,
+        List<ProductResponse> books
 ) {}

@@ -26,5 +26,8 @@ public record AuthorUpdateRequest(
         @NotNull(message = "Nationality is required")
         Nationality nationality,
 
-        Integer assetId
+        Integer assetId,
+
+        String portraitUrl,
+        String wikiUrl
 ) {}

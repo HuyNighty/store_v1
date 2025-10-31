@@ -1,7 +1,9 @@
 package com.ecommerce.store.dto.response.model_response;
 
 import com.ecommerce.store.enums.entity_enums.ProductAssetEnums.ProductAssetType;
+import lombok.Builder;
 
+@Builder
 public record ProductAssetResponse(
         Integer productId,
         String productName,
@@ -9,5 +11,6 @@ public record ProductAssetResponse(
         String fileName,
         String url,
         ProductAssetType type,
-        Integer ordinal
+        Integer ordinal,
+        String mimeType
 ) {}

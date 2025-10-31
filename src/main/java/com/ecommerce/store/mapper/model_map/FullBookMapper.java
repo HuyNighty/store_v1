@@ -1,16 +1,17 @@
 package com.ecommerce.store.mapper.model_map;
 
 import com.ecommerce.store.dto.request.model_request.FullBookRequest;
+import com.ecommerce.store.dto.response.model_response.CategoryResponse;
 import com.ecommerce.store.dto.response.model_response.FullBookResponse;
 import com.ecommerce.store.entity.Asset;
 import com.ecommerce.store.entity.Author;
+import com.ecommerce.store.entity.Category;
 import com.ecommerce.store.entity.Product;
-import com.ecommerce.store.enums.entity_enums.AssetEnums.AssetType;
-import com.ecommerce.store.enums.entity_enums.AuthorEnums.Nationality;
-import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface FullBookMapper {
@@ -38,32 +39,38 @@ public interface FullBookMapper {
     @Mapping(target = "bookAuthors", ignore = true)
     Author toAuthor(FullBookRequest request);
 
-    @Mapping(source = "author.authorBio", target = "authorBio")
-    @Mapping(source = "author.authorBornDate", target = "authorBornDate")
-    @Mapping(source = "author.authorDeathDate", target = "authorDeathDate")
-    @Mapping(source = "author.authorBio", target = "authorBio")
-    default FullBookResponse toFullResponse(Product product, Asset asset, Author author) {
-        return new FullBookResponse(
-                product.getSku(),
-                product.getSlug(),
-                product.getProductName(),
-                product.getPrice(),
-                product.getSalePrice(),
-                product.getStockQuantity(),
-                product.getWeightG(),
-                product.getIsActive(),
-                product.getFeatured(),
-                asset != null ? asset.getUrl() : null,
-                asset != null ? asset.getFileName() : null,
-                asset != null ? asset.getMimeType() : null,
-                asset != null ? asset.getWidth() : null,
-                asset != null ? asset.getHeight() : null,
-                asset != null ? asset.getSizeBytes() : null,
-                author != null ? author.getAuthorName() : null,
-                author != null ? author.getBio() : null,
-                author != null ? author.getBornDate() : null,
-                author != null ? author.getDeathDate() : null,
-                author != null ? author.getNationality() : null
+    // Category mapping method
+    default CategoryResponse toCategoryResponse(Category category) {
+        if (category == null) {
+            return null;
+        }
+        return new CategoryResponse(
+                category.getCategoryId(),
+                category.getParentId(),
+                category.getCategoryName(),
+                category.getSlug(),
+                category.getIsActive(),
+                category.getDescription()
         );
+    }
+
+    default List<CategoryResponse> toCategoryResponses(List<Category> categories) {
+        if (categories == null) {
+            return null;
+        }
+        return categories.stream()
+                .map(this::toCategoryResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Mapping(source = "author.bio", target = "bio")
+    @Mapping(source = "author.bornDate", target = "bornDate")
+    @Mapping(source = "author.deathDate", target = "deathDate")
+    @Mapping(source = "author.nationality", target = "nationality")
+    FullBookResponse toFullResponse(Product product, List<Category> categories, Asset asset, Author author);
+
+    // Overloaded method without categories for backward compatibility
+    default FullBookResponse toFullResponse(Product product, Asset asset, Author author) {
+        return toFullResponse(product, null, asset, author);
     }
 }

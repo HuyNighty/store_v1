@@ -69,6 +69,8 @@ public enum ErrorCode {
     INSUFFICIENT_STOCK(1052, "Insufficient stock", HttpStatus.BAD_REQUEST),
     CUSTOMER_NOT_FOUND(1053, "Customer not found", HttpStatus.NOT_FOUND),
     DELETE_ORDER_INVALID(1054, "Delete order invalid", HttpStatus.BAD_REQUEST),
+    CATEGORY_REQUIRED(1055, "Category required", HttpStatus.BAD_REQUEST),
+    CATEGORY_INACTIVE(1056, "Category inactive", HttpStatus.BAD_REQUEST),
     ;
     int code;
     String message;

@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.List;
 
 public record FullBookRequest(
         @NotBlank String sku,
@@ -20,6 +20,8 @@ public record FullBookRequest(
         Boolean isActive,
         Boolean featured,
 
+        @NotNull List<Integer> categoryIds,
+
         String url,
         String fileName,
         String mimeType,
@@ -28,8 +30,5 @@ public record FullBookRequest(
         Long sizeBytes,
 
         String authorName,
-        String bio,
-        LocalDate bornDate,
-        LocalDate deathDate,
-        Nationality nationality
+        Integer authorId
 ) {}

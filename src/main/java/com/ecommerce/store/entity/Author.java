@@ -37,6 +37,18 @@ public class Author extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     Nationality nationality;
 
+    @Column(name = "portrait_url")
+    String portraitUrl;
+
+    @Column(name = "wiki_url")
+    String wikiUrl;
+
+    @Column(name = "total_books")
+    Integer totalBooks;
+
+    @Column(name = "average_rating")
+    Double averageRating;
+
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "asset_id", unique = true, updatable = false)
     Asset asset;

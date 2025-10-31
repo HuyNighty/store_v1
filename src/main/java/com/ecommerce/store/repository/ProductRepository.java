@@ -24,5 +24,11 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
             "WHERE p.productId = :productId AND p.isActive = true")
     Optional<Product> findActiveProductWithDetails(@Param("productId") Integer productId);
 
+    @Query("SELECT p FROM Product p JOIN p.bookAuthors ba WHERE ba.author.authorId = :authorId AND p.isActive = true")
+    List<Product> findByAuthorId(@Param("authorId") Integer authorId);
+
+    @Query("SELECT p FROM Product p JOIN p.bookAuthors ba WHERE ba.author.authorId = :authorId AND p.isActive = true ORDER BY p.createdAt DESC")
+    List<Product> findLatestBooksByAuthorId(@Param("authorId") Integer authorId);
+
     Optional<Product> findByProductIdAndIsActiveTrue(Integer productId);
 }

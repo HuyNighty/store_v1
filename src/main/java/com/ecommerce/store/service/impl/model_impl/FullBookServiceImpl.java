@@ -21,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -34,6 +36,8 @@ public class FullBookServiceImpl implements FullBookService {
     AuthorRepository authorRepository;
     ProductAssetRepository productAssetRepository;
     BookAuthorRepository bookAuthorRepository;
+    CategoryRepository categoryRepository;
+    ProductCategoryRepository productCategoryRepository;
 
     FullBookMapper fullBookMapper;
 
@@ -49,9 +53,15 @@ public class FullBookServiceImpl implements FullBookService {
             throw new AppException(ErrorCode.PRODUCT_SLUG_EXISTED);
         }
 
+        // Validate categories tồn tại
+        List<Category> categories = validateAndGetCategories(request.categoryIds());
+
         Product product = fullBookMapper.toProduct(request);
         product.setCreatedAt(LocalDateTime.now());
         Product savedProduct = productRepository.save(product);
+
+        // Link categories với product
+        linkCategoriesToProduct(savedProduct, categories);
 
         Asset savedAsset = null;
         Author savedAuthor = null;
@@ -69,13 +79,60 @@ public class FullBookServiceImpl implements FullBookService {
                 log.info("Skipping author creation - no authorName provided");
             }
 
-            FullBookResponse response = fullBookMapper.toFullResponse(savedProduct, savedAsset, savedAuthor);
-            return response;
+            // Sử dụng method mới với categories
+            return fullBookMapper.toFullResponse(savedProduct, categories, savedAsset, savedAuthor);
 
         } catch (Exception e) {
             log.error("Failed to create full book: {}", e.getMessage(), e);
             throw new AppException(ErrorCode.CREATE_BOOK_FAILED);
         }
+    }
+
+    private List<Category> validateAndGetCategories(List<Integer> categoryIds) {
+        if (categoryIds == null || categoryIds.isEmpty()) {
+            throw new AppException(ErrorCode.CATEGORY_REQUIRED);
+        }
+
+        List<Category> categories = categoryRepository.findAllById(categoryIds);
+
+        // Kiểm tra xem tất cả categoryIds có tồn tại không
+        if (categories.size() != categoryIds.size()) {
+            List<Integer> foundIds = categories.stream()
+                    .map(Category::getCategoryId)
+                    .toList();
+
+            List<Integer> missingIds = categoryIds.stream()
+                    .filter(id -> !foundIds.contains(id))
+                    .toList();
+
+            throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
+        }
+
+        // Kiểm tra categories có active không
+        List<Category> inactiveCategories = categories.stream()
+                .filter(category -> !category.getIsActive())
+                .toList();
+
+        if (!inactiveCategories.isEmpty()) {
+            List<Integer> inactiveIds = inactiveCategories.stream()
+                    .map(Category::getCategoryId)
+                    .toList();
+            throw new AppException(ErrorCode.CATEGORY_INACTIVE);
+        }
+
+        return categories;
+    }
+
+    private void linkCategoriesToProduct(Product product, List<Category> categories) {
+        List<ProductCategory> productCategories = new ArrayList<>();
+
+        for (Category category : categories) {
+            ProductCategory productCategory = ProductCategory.create(product, category);
+            productCategories.add(productCategory);
+        }
+
+        productCategoryRepository.saveAll(productCategories);
+        log.info("Successfully linked {} categories to product: {}", categories.size(), product.getProductId());
     }
 
     private Asset createAndLinkAsset(FullBookRequest request, Product product) {

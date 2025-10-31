@@ -27,4 +27,14 @@ public class ProductCategory {
     @MapsId("categoryId")
     @JoinColumn(name = "category_id", nullable = false)
     Category category;
+
+    // Static factory method để tạo ProductCategory dễ dàng
+    public static ProductCategory create(Product product, Category category) {
+        ProductCategoryId id = new ProductCategoryId(product.getProductId(), category.getCategoryId());
+        return ProductCategory.builder()
+                .productCategoryId(id)
+                .product(product)
+                .category(category)
+                .build();
+    }
 }
