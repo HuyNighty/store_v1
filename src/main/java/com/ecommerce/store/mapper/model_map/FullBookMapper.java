@@ -63,10 +63,6 @@ public interface FullBookMapper {
                 .collect(Collectors.toList());
     }
 
-    @Mapping(source = "author.bio", target = "bio")
-    @Mapping(source = "author.bornDate", target = "bornDate")
-    @Mapping(source = "author.deathDate", target = "deathDate")
-    @Mapping(source = "author.nationality", target = "nationality")
     FullBookResponse toFullResponse(Product product, List<Category> categories, Asset asset, Author author);
 
     // Overloaded method without categories for backward compatibility

@@ -16,6 +16,8 @@ public record OrderResponse(
         String note,
         String shippingAddress,
         BigDecimal shippingCost,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt,
         LocalDateTime canceledAt,
         LocalDateTime completedAt,
         LocalDateTime deliveredAt,

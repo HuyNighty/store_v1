@@ -1,9 +1,6 @@
 package com.ecommerce.store.dto.response.model_response;
 
-import com.ecommerce.store.enums.entity_enums.AuthorEnums.Nationality;
-
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
 public record FullBookResponse(
@@ -26,9 +23,5 @@ public record FullBookResponse(
 
         List<CategoryResponse> categories,
 
-        String authorName,
-        String bio,
-        LocalDate bornDate,
-        LocalDate deathDate,
-        Nationality nationality
+        String authorName
 ) {}
