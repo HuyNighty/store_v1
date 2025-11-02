@@ -48,7 +48,8 @@ public class ReviewServiceImpl implements ReviewService {
                 .user(user)
                 .rating(request.rating())
                 .comment(request.comment())
-                .isApproved(false)
+                .isApproved(true)
+                .approvedAt(LocalDateTime.now())
                 .build();
 
         reviewRepository.save(review);
@@ -67,7 +68,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         if (request.rating() != null) {
-            if (request.rating() < 0 || request.rating() > 10) {
+            if (request.rating() < 0 || request.rating() > 5) {
                 throw new AppException(ErrorCode.INVALID_RATING);
             }
             review.setRating(request.rating());
@@ -127,5 +128,12 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND));
         reviewRepository.delete(review);
+    }
+
+    @Override
+    public List<ReviewResponse> getApprovedReviewsByProduct(Integer productId) {
+        return reviewMapper.toResponseList(
+                reviewRepository.findByProductProductIdAndIsApprovedTrue(productId)
+        );
     }
 }

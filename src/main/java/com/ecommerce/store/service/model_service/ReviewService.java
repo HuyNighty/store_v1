@@ -22,4 +22,6 @@ public interface ReviewService {
     ReviewResponse approveReview(Integer reviewId);
 
     void deleteReviewAsAdmin(Integer reviewId);
+
+    List<ReviewResponse> getApprovedReviewsByProduct(Integer productId);
 }

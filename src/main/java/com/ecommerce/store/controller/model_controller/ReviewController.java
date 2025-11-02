@@ -70,7 +70,7 @@ public class ReviewController {
                 .build();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/products/{productId}")
     public ApiResponse<List<ReviewResponse>> getReviewsByProduct(@PathVariable Integer productId) {
         return ApiResponse
@@ -96,6 +96,14 @@ public class ReviewController {
                 .<Void>builder()
                 .code(200)
                 .message("Deleted review successfully")
+                .build();
+    }
+
+    @GetMapping("/public/products/{productId}")
+    public ApiResponse<List<ReviewResponse>> getPublicReviewsByProduct(@PathVariable Integer productId) {
+        return ApiResponse
+                .<List<ReviewResponse>>builder()
+                .result(reviewService.getApprovedReviewsByProduct(productId))
                 .build();
     }
 }
