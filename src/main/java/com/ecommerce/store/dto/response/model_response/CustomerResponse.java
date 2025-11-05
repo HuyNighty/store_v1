@@ -2,6 +2,7 @@ package com.ecommerce.store.dto.response.model_response;
 
 public record CustomerResponse(
         String customerId,
+        String profileImage,
         String userId,
         String firstName,
         String lastName,

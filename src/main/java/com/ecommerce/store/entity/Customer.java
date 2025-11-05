@@ -20,6 +20,9 @@ public class Customer extends BaseTimeEntity {
     @Column(columnDefinition = "VARCHAR(36)")
     String customerId;
 
+    @Column(name = "profile_image")
+    String profileImage;
+
     @Column(nullable = false)
     String firstName;
 

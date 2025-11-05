@@ -7,8 +7,10 @@ import com.ecommerce.store.service.model_service.CustomerService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,11 +18,11 @@ import java.util.List;
 @RequestMapping("/api/customers")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
 public class CustomerController {
 
     CustomerService customerService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ApiResponse<List<CustomerResponse>> getAllCustomers() {
         return ApiResponse
@@ -29,6 +31,7 @@ public class CustomerController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{customerId}")
     public ApiResponse<CustomerResponse> getCustomerById(@PathVariable String customerId) {
         return ApiResponse
@@ -37,6 +40,7 @@ public class CustomerController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{customerId}")
     public ApiResponse<CustomerResponse> updateCustomer(
             @PathVariable String customerId,
@@ -47,11 +51,38 @@ public class CustomerController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/by-user/{userId}")
     public ApiResponse<CustomerResponse> getCustomerByUserId(@PathVariable String userId) {
         return ApiResponse
                 .<CustomerResponse>builder()
                 .result(customerService.getCustomerByUserId(userId))
+                .build();
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public ApiResponse<CustomerResponse> getMyProfile() {
+        return ApiResponse.<CustomerResponse>builder()
+                .result(customerService.getCurrentCustomer())
+                .build();
+    }
+
+    @PostMapping(value = "/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("isAuthenticated()")
+    public ApiResponse<String> uploadProfileImage(@RequestParam("file") MultipartFile file) {
+        return ApiResponse.<String>builder()
+                .result(customerService.uploadProfileImage(file))
+                .message("Profile image uploaded successfully")
+                .build();
+    }
+
+    @DeleteMapping("/profile-image")
+    @PreAuthorize("isAuthenticated()")
+    public ApiResponse<Void> removeProfileImage() {
+        customerService.removeProfileImage();
+        return ApiResponse.<Void>builder()
+                .message("Profile image removed successfully")
                 .build();
     }
 }

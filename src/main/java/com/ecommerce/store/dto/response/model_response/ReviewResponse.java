@@ -8,6 +8,8 @@ public record ReviewResponse(
         String productName,
         String userId,
         String userName,
+        String profileImage,
+        String email,
         Float rating,
         String comment,
         Boolean isApproved,

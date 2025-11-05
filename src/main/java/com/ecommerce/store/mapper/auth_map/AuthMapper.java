@@ -41,6 +41,7 @@ public interface AuthMapper {
     @Mapping(source = "customer.address", target = "address")
     @Mapping(source = "user.email", target = "email")
     @Mapping(source = "customer.loyaltyPoints", target = "loyaltyPoints")
+    @Mapping(source = "customer.profileImage", target = "profileImage")
     MyInfoResponse toMyInfoResponse(MyInfoSource source);
 
     default Set<String> getRoles(User user) {

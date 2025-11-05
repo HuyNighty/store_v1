@@ -7,6 +7,7 @@ public record MyInfoResponse(
         String userName,
         String firstName,
         String lastName,
+        String profileImage,
         String phoneNumber,
         String email,
         String address,

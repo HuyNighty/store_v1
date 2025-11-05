@@ -12,5 +12,4 @@ public interface OrderItemService {
     void removeItem(Jwt jwt, Integer orderItemId);
     List<OrderItemResponse> getItemsByOrder(Jwt jwt, Integer orderId);
     List<OrderItemResponse> getItemsByOrderAdmin(Integer orderId);
-
 }

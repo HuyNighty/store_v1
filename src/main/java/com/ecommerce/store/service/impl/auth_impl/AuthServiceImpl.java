@@ -141,6 +141,7 @@ public class AuthServiceImpl implements AuthService {
 
         User user = authMapper.toUser(request);
         Customer customer = authMapper.toCustomer(request);
+        customer.setProfileImage(null);
 
         customer.setUser(user);
         user.setCustomer(customer);

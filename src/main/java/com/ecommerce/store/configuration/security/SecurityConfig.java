@@ -62,6 +62,9 @@ public class SecurityConfig {
                                 // public read on products
                                 .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
 
+                                // static resources - UPLOADS
+                                .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
+
                                 // other product ops only admin
                                 .requestMatchers(HttpMethod.POST, "/api/products/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PATCH, "/api/products/**").hasRole("ADMIN")

@@ -71,6 +71,10 @@ public enum ErrorCode {
     DELETE_ORDER_INVALID(1054, "Delete order invalid", HttpStatus.BAD_REQUEST),
     CATEGORY_REQUIRED(1055, "Category required", HttpStatus.BAD_REQUEST),
     CATEGORY_INACTIVE(1056, "Category inactive", HttpStatus.BAD_REQUEST),
+    FILE_EMPTY(400, "File is empty", HttpStatus.BAD_REQUEST),
+    INVALID_FILE_TYPE(400, "Invalid file type. Only images are allowed", HttpStatus.BAD_REQUEST),
+    FILE_TOO_LARGE(400, "File size exceeds maximum limit of 5MB", HttpStatus.BAD_REQUEST),
+    FILE_UPLOAD_FAILED(500, "Failed to upload file", HttpStatus.BAD_REQUEST),
     ;
     int code;
     String message;
