@@ -62,6 +62,11 @@ public class SecurityConfig {
                                 // public read on products
                                 .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
 
+                                // public read on authors
+                                .requestMatchers(HttpMethod.GET, "/api/authors/public/**").permitAll()
+
+                                .requestMatchers("/api/reviews/public/**").permitAll()
+
                                 // static resources - UPLOADS
                                 .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
 
@@ -76,6 +81,14 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/api/assets/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PATCH, "/api/assets/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/api/assets/**").hasRole("ADMIN")
+
+                                // authors admin endpoints
+                                .requestMatchers(HttpMethod.POST, "/api/authors/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PATCH, "/api/authors/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/api/authors/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/api/authors/**").hasRole("ADMIN")
+
+                                .requestMatchers(HttpMethod.GET, "/api/categories/public").permitAll()
 
                                 // fallback
                                 .anyRequest().authenticated()
@@ -103,12 +116,14 @@ public class SecurityConfig {
         return jwtAuthenticationConverter;
     }
 
+    
+    
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
         List<String> origins = Arrays.asList(FRONTEND_ORIGINS.split(","));
-        config.setAllowedOrigins(origins); // explicit origins required when allowCredentials = true
+        config.setAllowedOrigins(origins);
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
         config.setAllowCredentials(true);

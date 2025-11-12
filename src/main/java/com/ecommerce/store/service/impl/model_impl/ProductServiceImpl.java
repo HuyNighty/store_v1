@@ -111,4 +111,18 @@ public class ProductServiceImpl implements ProductService {
                 .map(productMapper::toProductResponse)
                 .toList();
     }
+
+    public List<ProductResponse> getProductsByCategory(Integer categoryId) {
+        List<Product> products = productRepository.findByCategoryId(categoryId);
+        return products.stream()
+                .map(productMapper::toProductResponse)
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    public List<ProductResponse> filterProducts(Integer categoryId, java.math.BigDecimal minPrice, java.math.BigDecimal maxPrice) {
+        List<Product> products = productRepository.findWithFilters(categoryId, minPrice, maxPrice);
+        return products.stream()
+                .map(productMapper::toProductResponse)
+                .collect(java.util.stream.Collectors.toList());
+    }
 }

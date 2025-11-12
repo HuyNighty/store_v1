@@ -11,12 +11,15 @@ public interface AuthorMapper {
 
     @Mapping(target = "authorId", ignore = true)
     @Mapping(target = "bookAuthors", ignore = true)
+    @Mapping(target = "asset", ignore = true)
     Author toEntity(AuthorRequest authorRequest);
 
     default AuthorResponse toResponse(Author author) {
         if (author == null) {
             return null;
         }
+
+        Integer assetId = author.getAsset() != null ? author.getAsset().getAssetId() : null;
 
         return AuthorResponse.builder()
                 .authorId(author.getAuthorId())
@@ -25,7 +28,7 @@ public interface AuthorMapper {
                 .bornDate(author.getBornDate())
                 .deathDate(author.getDeathDate())
                 .nationality(author.getNationality())
-                .assetId(author.getAsset() != null ? author.getAsset().getAssetId() : null)
+                .assetId(assetId)
                 .build();
     }
 
@@ -34,14 +37,4 @@ public interface AuthorMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateAuthorFromRequest(AuthorUpdateRequest authorRequest, @MappingTarget Author author);
-
-    default String mapPortraitUrl(Author author) {
-        if (author.getPortraitUrl() != null && !author.getPortraitUrl().isBlank()) {
-            return author.getPortraitUrl();
-        }
-        if (author.getAsset() != null && author.getAsset().getUrl() != null) {
-            return author.getAsset().getUrl();
-        }
-        return "/images/default-author.jpg";
-    }
 }

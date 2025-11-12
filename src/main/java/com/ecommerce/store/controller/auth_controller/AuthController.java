@@ -192,7 +192,7 @@ public class AuthController {
         ResponseCookie cookie = ResponseCookie.from("refreshToken", newRefreshToken)
                 .httpOnly(true)
                 .secure(false)
-                .path("/api/auth")
+                .path("/")
                 .maxAge(Duration.ofSeconds(jwtService.getRefreshDurationSeconds()))
                 .sameSite("Lax")
                 .build();

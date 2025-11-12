@@ -20,6 +20,7 @@ public record ProductResponse(
         Boolean featured,
         List<ProductAssetResponse> productAssets,
         List<BookAuthorResponse> bookAuthors,
+        List<CategoryResponse> categories,
         Double averageRating,
         Integer reviewCount,
         LocalDateTime createdAt,

@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -73,6 +74,25 @@ public class ProductController {
         return ApiResponse
                 .<List<ProductResponse>>builder()
                 .result(productService.searchProducts(keyword))
+                .build();
+    }
+
+    @GetMapping("/by-category/{categoryId}")
+    public ApiResponse<List<ProductResponse>> getProductsByCategory(@PathVariable Integer categoryId) {
+        return ApiResponse
+                .<List<ProductResponse>>builder()
+                .result(productService.getProductsByCategory(categoryId))
+                .build();
+    }
+
+    @GetMapping("/filter")
+    public ApiResponse<List<ProductResponse>> filterProducts(
+            @RequestParam(required = false) Integer categoryId,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice) {
+        return ApiResponse
+                .<List<ProductResponse>>builder()
+                .result(productService.filterProducts(categoryId, minPrice, maxPrice))
                 .build();
     }
 }

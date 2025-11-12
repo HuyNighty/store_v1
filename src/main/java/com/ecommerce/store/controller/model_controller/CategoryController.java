@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -18,26 +19,28 @@ import static lombok.AccessLevel.PRIVATE;
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
-@PreAuthorize("hasRole('ADMIN')")
 public class CategoryController {
 
     CategoryService categoryService;
 
-    @PostMapping
-    public ApiResponse<CategoryResponse> create(@RequestBody @Valid CategoryRequest request) {
+    @GetMapping("/public")
+    public ApiResponse<List<CategoryResponse>> getAllPublic() {
+        List<CategoryResponse> activeCategories = categoryService.getAll()
+                .stream()
+                .filter(category -> Boolean.TRUE.equals(category.isActive()))
+                .collect(Collectors.toList());
+
         return ApiResponse
-                .<CategoryResponse>builder()
-                .result(categoryService.create(request))
+                .<List<CategoryResponse>>builder()
+                .result(activeCategories)
                 .build();
     }
 
-    @PatchMapping("/{id}")
-    public ApiResponse<CategoryResponse> update(
-            @PathVariable Integer id,
-            @RequestBody CategoryRequest request) {
-        return ApiResponse
-                .<CategoryResponse>builder()
-                .result(categoryService.update(id, request))
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse<List<CategoryResponse>> getAllAdmin() {
+        return ApiResponse.<List<CategoryResponse>>builder()
+                .result(categoryService.getAll())
                 .build();
     }
 
@@ -49,14 +52,27 @@ public class CategoryController {
                 .build();
     }
 
-    @GetMapping
-    public ApiResponse<List<CategoryResponse>> getAll() {
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse<CategoryResponse> create(@RequestBody @Valid CategoryRequest request) {
         return ApiResponse
-                .<List<CategoryResponse>>builder()
-                .result(categoryService.getAll())
+                .<CategoryResponse>builder()
+                .result(categoryService.create(request))
                 .build();
     }
 
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse<CategoryResponse> update(
+            @PathVariable Integer id,
+            @RequestBody CategoryRequest request) {
+        return ApiResponse
+                .<CategoryResponse>builder()
+                .result(categoryService.update(id, request))
+                .build();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ApiResponse<Void> softDelete(@PathVariable Integer id) {
         categoryService.softDelete(id);

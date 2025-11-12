@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,4 +32,17 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     List<Product> findLatestBooksByAuthorId(@Param("authorId") Integer authorId);
 
     Optional<Product> findByProductIdAndIsActiveTrue(Integer productId);
+
+    @Query("SELECT p FROM Product p JOIN p.productCategory pc WHERE pc.category.categoryId = :categoryId AND p.isActive = true")
+    List<Product> findByCategoryId(@Param("categoryId") Integer categoryId);
+
+    @Query("SELECT p FROM Product p " +
+            "JOIN p.productCategory pc " +
+            "WHERE (:categoryId IS NULL OR pc.category.categoryId = :categoryId) " +
+            "AND p.isActive = true " +
+            "AND (:minPrice IS NULL OR p.salePrice >= :minPrice) " +
+            "AND (:maxPrice IS NULL OR p.salePrice <= :maxPrice)")
+    List<Product> findWithFilters(@Param("categoryId") Integer categoryId,
+                                  @Param("minPrice") java.math.BigDecimal minPrice,
+                                  @Param("maxPrice") java.math.BigDecimal maxPrice);
 }

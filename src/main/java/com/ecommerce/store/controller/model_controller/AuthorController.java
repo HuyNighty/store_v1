@@ -58,7 +58,6 @@ public class AuthorController {
                 .build();
     }
 
-    // ========== ADMIN ENDPOINTS ==========
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")

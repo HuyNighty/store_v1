@@ -1,15 +1,15 @@
 package com.ecommerce.store.mapper.model_map;
 
 import com.ecommerce.store.dto.request.model_request.ProductRequest;
+import com.ecommerce.store.dto.response.model_response.CategoryResponse;
 import com.ecommerce.store.dto.response.model_response.ProductResponse;
 import com.ecommerce.store.dto.response.model_response.ProductAssetResponse;
 import com.ecommerce.store.dto.response.model_response.BookAuthorResponse;
-import com.ecommerce.store.entity.Product;
-import com.ecommerce.store.entity.ProductAsset;
-import com.ecommerce.store.entity.BookAuthor;
+import com.ecommerce.store.entity.*;
 import org.mapstruct.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,7 +38,6 @@ public interface ProductMapper {
         }
     }
 
-    // Sử dụng Builder cho ProductResponse
     default ProductResponse toProductResponse(Product product) {
         if (product == null) {
             return null;
@@ -57,6 +56,7 @@ public interface ProductMapper {
                 .featured(product.getFeatured())
                 .productAssets(mapProductAssets(product.getProductAssets()))
                 .bookAuthors(mapBookAuthors(product.getBookAuthors()))
+                .categories(mapCategories(product.getProductCategory()))
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
                 .build();
@@ -107,6 +107,47 @@ public interface ProductMapper {
                 .build();
     }
 
+    default List<CategoryResponse> mapCategories(Set<ProductCategory> productCategories) {
+        if (productCategories == null) {
+            return List.of();
+        }
+
+        return productCategories.stream()
+                .map(ProductCategory::getCategory)
+                .filter(Objects::nonNull)
+                .map(this::toCategoryResponse)
+                .collect(Collectors.toList());
+    }
+
+    default CategoryResponse toCategoryResponse(Category category) {
+        if (category == null) {
+            return null;
+        }
+
+        return CategoryResponse.builder()
+                .categoryId(category.getCategoryId())
+                .categoryName(category.getCategoryName())
+                .description(category.getDescription())
+                .slug(category.getSlug())
+                .parentId(category.getParentId())
+                .isActive(category.getIsActive())
+                .build();
+    }
+
+    default Double calculateAverageRating(Product product) {
+        if (product.getReviews() == null || product.getReviews().isEmpty()) {
+            return 0.0;
+        }
+
+        return product.getReviews().stream()
+                .mapToDouble(review -> review.getRating() != null ? review.getRating().doubleValue() : 0.0)
+                .average()
+                .orElse(0.0);
+    }
+
+    default Integer calculateReviewCount(Product product) {
+        return product.getReviews() != null ? product.getReviews().size() : 0;
+    }
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateProductFromRequest(ProductRequest request, @MappingTarget Product product);
 }

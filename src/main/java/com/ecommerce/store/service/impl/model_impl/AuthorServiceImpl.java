@@ -37,21 +37,25 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public AuthorResponse create(AuthorRequest request) {
+        if (request == null) {
+            throw new AppException(ErrorCode.AUTHOR_NOT_FOUND);
+        }
+
         if (authorRepository.existsByAuthorName(request.authorName())) {
             throw new AppException(ErrorCode.AUTHOR_EXISTED);
         }
 
         Author author = authorMapper.toEntity(request);
 
-        // Set asset nếu có assetId
         if (request.assetId() != null) {
             Asset asset = assetRepository.findById(request.assetId())
                     .orElseThrow(() -> new AppException(ErrorCode.ASSET_NOT_FOUND));
             author.setAsset(asset);
+            author.setPortraitUrl(null);
+        } else if (request.portraitUrl() != null && !request.portraitUrl().isBlank()) {
+            author.setPortraitUrl(request.portraitUrl());
         }
 
-        // Set các trường mới
-        author.setPortraitUrl(request.portraitUrl());
         author.setWikiUrl(request.wikiUrl());
 
         authorRepository.save(author);
@@ -63,22 +67,23 @@ public class AuthorServiceImpl implements AuthorService {
         Author author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new AppException(ErrorCode.AUTHOR_NOT_FOUND));
 
+        if (request == null) {
+            throw new AppException(ErrorCode.AUTHOR_NOT_FOUND);
+        }
+
         if (request.assetId() != null) {
             Asset asset = assetRepository.findById(request.assetId())
                     .orElseThrow(() -> new AppException(ErrorCode.ASSET_NOT_FOUND));
             author.setAsset(asset);
+            author.setPortraitUrl(null);
+        } else if (request.portraitUrl() != null) {
+            author.setPortraitUrl(request.portraitUrl());
         }
 
-        // Xử lý deathDate
-        if (request.deathDate() != null && request.deathDate().toString().trim().isEmpty()) {
-            author.setDeathDate(null);
-        } else {
+        if (request.deathDate() != null) {
             author.setDeathDate(request.deathDate());
         }
 
-        if (request.portraitUrl() != null) {
-            author.setPortraitUrl(request.portraitUrl());
-        }
         if (request.wikiUrl() != null) {
             author.setWikiUrl(request.wikiUrl());
         }
@@ -175,15 +180,13 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     private String getAuthorPortraitUrl(Author author) {
-        // Ưu tiên portraitUrl trực tiếp
+        if (author == null) return "/images/default-author.jpg";
         if (author.getPortraitUrl() != null && !author.getPortraitUrl().isBlank()) {
             return author.getPortraitUrl();
         }
-        // Fallback đến asset URL
-        if (author.getAsset() != null && author.getAsset().getUrl() != null) {
+        if (author.getAsset() != null && author.getAsset().getUrl() != null && !author.getAsset().getUrl().isBlank()) {
             return author.getAsset().getUrl();
         }
-        // Default image
         return "/images/default-author.jpg";
     }
 
@@ -192,13 +195,39 @@ public class AuthorServiceImpl implements AuthorService {
             return 0.0;
         }
 
-        return books.stream()
-                .mapToDouble(book -> {
-                    // Tạm thời return 0.0, bạn cần cập nhật theo cấu trúc thực tế
-                    // Ví dụ: book.averageRating() != null ? book.averageRating() : 0.0
-                    return 0.0;
-                })
-                .average()
-                .orElse(0.0);
+        double sum = 0.0;
+        int count = 0;
+
+        for (ProductResponse b : books) {
+            try {
+                Object val = null;
+                Class<?> cls = b.getClass();
+                String[] candidates = new String[] {
+                        "getAverageRating", "averageRating", "getRating", "rating", "getAvgRating", "avgRating"
+                };
+                for (String m : candidates) {
+                    try {
+                        java.lang.reflect.Method method = cls.getMethod(m);
+                        val = method.invoke(b);
+                        if (val != null) break;
+                    } catch (NoSuchMethodException ignored) {
+                    }
+                }
+                if (val instanceof Number) {
+                    sum += ((Number) val).doubleValue();
+                    count++;
+                } else if (val instanceof String) {
+                    try {
+                        sum += Double.parseDouble((String) val);
+                        count++;
+                    } catch (NumberFormatException ignored) {
+                    }
+                }
+            } catch (Exception ignored) {
+            }
+        }
+
+        if (count == 0) return 0.0;
+        return sum / count;
     }
 }

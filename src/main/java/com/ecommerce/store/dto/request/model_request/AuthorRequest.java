@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public record AuthorRequest(
         @NotBlank(message = "Author name is required")
@@ -22,9 +23,11 @@ public record AuthorRequest(
         @NotNull(message = "Nationality is required")
         Nationality nationality,
 
-        @NotNull
         Integer assetId,
 
         String portraitUrl,
+
+        List<Integer> galleryAssetIds,
+
         String wikiUrl
 ) {}

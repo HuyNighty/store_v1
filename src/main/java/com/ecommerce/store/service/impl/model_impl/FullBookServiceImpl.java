@@ -83,7 +83,6 @@ public class FullBookServiceImpl implements FullBookService {
             return fullBookMapper.toFullResponse(savedProduct, categories, savedAsset, savedAuthor);
 
         } catch (Exception e) {
-            log.error("Failed to create full book: {}", e.getMessage(), e);
             throw new AppException(ErrorCode.CREATE_BOOK_FAILED);
         }
     }
@@ -132,7 +131,6 @@ public class FullBookServiceImpl implements FullBookService {
         }
 
         productCategoryRepository.saveAll(productCategories);
-        log.info("Successfully linked {} categories to product: {}", categories.size(), product.getProductId());
     }
 
     private Asset createAndLinkAsset(FullBookRequest request, Product product) {
@@ -164,7 +162,6 @@ public class FullBookServiceImpl implements FullBookService {
                 .build();
 
         productAssetRepository.save(productAsset);
-        log.info("Successfully created and linked asset for product: {}", product.getProductId());
 
         return savedAsset;
     }
@@ -205,7 +202,6 @@ public class FullBookServiceImpl implements FullBookService {
                 .build();
 
         bookAuthorRepository.save(bookAuthor);
-        log.info("Successfully created and linked author for product: {}", product.getProductId());
 
         return savedAuthor;
     }
