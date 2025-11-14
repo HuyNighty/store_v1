@@ -1,6 +1,7 @@
 package com.ecommerce.store.controller.model_controller;
 
 import com.ecommerce.store.dto.request.model_request.FullBookRequest;
+import com.ecommerce.store.dto.request.model_request.FullBookUpdateRequest;
 import com.ecommerce.store.dto.response.ApiResponse;
 import com.ecommerce.store.dto.response.model_response.FullBookResponse;
 import com.ecommerce.store.service.model_service.FullBookService;
@@ -10,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/full-books")
@@ -37,4 +35,16 @@ public class FullBookController {
                 .build();
     }
 
+    @PatchMapping("/{productId}")
+    public ApiResponse<FullBookResponse> updateFullBook(
+            @PathVariable Integer productId,
+            @RequestBody @Valid FullBookUpdateRequest request) {
+        FullBookResponse result = fullBookService.updateFullBook(productId, request);
+
+        return ApiResponse
+                .<FullBookResponse>builder()
+                .result(result)
+                .message("Book updated successfully with related entities")
+                .build();
+    }
 }

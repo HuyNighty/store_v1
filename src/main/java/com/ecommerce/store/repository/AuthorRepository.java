@@ -19,4 +19,6 @@ public interface AuthorRepository extends JpaRepository<Author, Integer> {
 
     @Query("SELECT COUNT(ba) FROM BookAuthor ba WHERE ba.author.authorId = :authorId")
     Integer countBooksByAuthorId(@Param("authorId") Integer authorId);
+    Optional<Author> findByAuthorName(String authorName);
+
 }

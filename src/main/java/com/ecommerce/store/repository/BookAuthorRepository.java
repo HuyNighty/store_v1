@@ -11,4 +11,6 @@ import java.util.List;
 public interface BookAuthorRepository extends JpaRepository<BookAuthor, BookAuthorId> {
     List<BookAuthor> findByAuthorAuthorNameContainingIgnoreCase(String keyword);
     List<BookAuthor> findByProductProductId(Integer productId);
+    List<BookAuthor> findByProduct_ProductId(Integer productId);
+
 }

@@ -12,4 +12,5 @@ public interface AssetRepository extends JpaRepository<Asset, Integer> {
 
     boolean existsByUrl(String url);
     Optional<Asset> findByType(AssetType assetType);
+
 }

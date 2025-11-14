@@ -1,6 +1,7 @@
 package com.ecommerce.store.mapper.model_map;
 
 import com.ecommerce.store.dto.request.model_request.FullBookRequest;
+import com.ecommerce.store.dto.request.model_request.FullBookUpdateRequest;
 import com.ecommerce.store.dto.response.model_response.CategoryResponse;
 import com.ecommerce.store.dto.response.model_response.FullBookResponse;
 import com.ecommerce.store.entity.Asset;
@@ -26,20 +27,38 @@ public interface FullBookMapper {
     @Mapping(target = "productAttributeValues", ignore = true)
     Product toProduct(FullBookRequest request);
 
-    // Asset mappings
     @Mapping(target = "assetId", ignore = true)
     @Mapping(target = "type", constant = "IMAGE")
     @Mapping(target = "productAssets", ignore = true)
     @Mapping(target = "author", ignore = true)
     Asset toAsset(FullBookRequest request);
 
-    // Author mappings
     @Mapping(target = "authorId", ignore = true)
     @Mapping(target = "asset", ignore = true)
     @Mapping(target = "bookAuthors", ignore = true)
     Author toAuthor(FullBookRequest request);
 
-    // Category mapping method
+    @Mapping(target = "productId", ignore = true)
+    @Mapping(target = "cartItem", ignore = true)
+    @Mapping(target = "orderItem", ignore = true)
+    @Mapping(target = "productAssets", ignore = true)
+    @Mapping(target = "reviews", ignore = true)
+    @Mapping(target = "productCategory", ignore = true)
+    @Mapping(target = "bookAuthors", ignore = true)
+    @Mapping(target = "productAttributeValues", ignore = true)
+    Product toProduct(FullBookUpdateRequest request);
+
+    @Mapping(target = "assetId", ignore = true)
+    @Mapping(target = "type", constant = "IMAGE")
+    @Mapping(target = "productAssets", ignore = true)
+    @Mapping(target = "author", ignore = true)
+    Asset toAsset(FullBookUpdateRequest request);
+
+    @Mapping(target = "authorId", ignore = true)
+    @Mapping(target = "asset", ignore = true)
+    @Mapping(target = "bookAuthors", ignore = true)
+    Author toAuthor(FullBookUpdateRequest request);
+
     default CategoryResponse toCategoryResponse(Category category) {
         if (category == null) {
             return null;
@@ -65,7 +84,6 @@ public interface FullBookMapper {
 
     FullBookResponse toFullResponse(Product product, List<Category> categories, Asset asset, Author author);
 
-    // Overloaded method without categories for backward compatibility
     default FullBookResponse toFullResponse(Product product, Asset asset, Author author) {
         return toFullResponse(product, null, asset, author);
     }

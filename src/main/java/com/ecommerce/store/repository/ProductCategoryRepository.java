@@ -17,4 +17,7 @@ public interface ProductCategoryRepository extends JpaRepository<ProductCategory
 
     @Query("SELECT pc FROM ProductCategory pc JOIN FETCH pc.product p JOIN FETCH pc.category c WHERE c.categoryId = :categoryId AND p.isActive = true")
     List<ProductCategory> findActiveProductsByCategoryId(@Param("categoryId") Integer categoryId);
+
+    List<ProductCategory> findByProduct_ProductId(Integer productId);
+
 }

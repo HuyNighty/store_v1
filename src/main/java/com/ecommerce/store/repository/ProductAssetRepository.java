@@ -14,4 +14,6 @@ public interface ProductAssetRepository extends JpaRepository<ProductAsset, Prod
     List<ProductAsset> findByProductProductId(Integer productId);
     List<ProductAsset> findByType(ProductAssetType type);
     List<ProductAsset> findByOrdinal(Integer ordinal);
+    ProductAsset findFirstByProduct_ProductIdAndType(Integer productId, ProductAssetType type);
+
 }
