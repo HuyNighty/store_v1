@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -119,10 +120,11 @@ public class ProductServiceImpl implements ProductService {
                 .collect(java.util.stream.Collectors.toList());
     }
 
-    public List<ProductResponse> filterProducts(Integer categoryId, java.math.BigDecimal minPrice, java.math.BigDecimal maxPrice) {
-        List<Product> products = productRepository.findWithFilters(categoryId, minPrice, maxPrice);
+    public List<ProductResponse> filterProducts(
+            Integer categoryId, BigDecimal minPrice, BigDecimal maxPrice, Double minRating) {
+        List<Product> products = productRepository.findWithFiltersAndRating(categoryId, minPrice, maxPrice, minRating);
         return products.stream()
                 .map(productMapper::toProductResponse)
-                .collect(java.util.stream.Collectors.toList());
+                .toList();
     }
 }

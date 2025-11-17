@@ -12,4 +12,6 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
     List<Review> findByUserUserId(String userId);
     List<Review> findByProductProductId(Integer productId);
     List<Review> findByProductProductIdAndIsApprovedTrue(Integer productId);
+    List<Review> findByProductProductIdAndIsApprovedTrueAndRatingGreaterThanEqual(Integer productId, Float minRating);
+
 }

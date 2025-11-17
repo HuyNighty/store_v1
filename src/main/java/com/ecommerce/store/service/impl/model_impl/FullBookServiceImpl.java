@@ -45,24 +45,20 @@ public class FullBookServiceImpl implements FullBookService {
 
     @Override
     public FullBookResponse createFullBook(FullBookRequest request) {
-        // Check duplicate SKU
         if (productRepository.existsBySku(request.sku())) {
             throw new AppException(ErrorCode.PRODUCT_SKU_EXISTED);
         }
 
-        // Check duplicate slug
         if (productRepository.existsBySlug(request.slug())) {
             throw new AppException(ErrorCode.PRODUCT_SLUG_EXISTED);
         }
 
-        // Validate categories (must provide)
         List<Category> categories = validateAndGetCategories(request.categoryIds());
 
         Product product = fullBookMapper.toProduct(request);
         product.setCreatedAt(LocalDateTime.now());
         Product savedProduct = productRepository.save(product);
 
-        // Link categories
         linkCategoriesToProduct(savedProduct, categories);
 
         Asset savedAsset = null;
@@ -91,11 +87,9 @@ public class FullBookServiceImpl implements FullBookService {
 
     @Override
     public FullBookResponse updateFullBook(Integer productId, FullBookUpdateRequest request) {
-        // 1. Load existing product
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        // 2. SKU/Slug check if provided & changed
         if (request.sku() != null && !request.sku().isBlank() && !request.sku().equals(product.getSku())) {
             if (productRepository.existsBySku(request.sku())) {
                 throw new AppException(ErrorCode.PRODUCT_SKU_EXISTED);
@@ -109,7 +103,6 @@ public class FullBookServiceImpl implements FullBookService {
             product.setSlug(request.slug());
         }
 
-        // 3. Update basic fields only if provided (partial update)
         if (request.productName() != null) product.setProductName(request.productName());
         if (request.price() != null) product.setPrice(request.price());
         if (request.salePrice() != null) product.setSalePrice(request.salePrice());
@@ -118,21 +111,16 @@ public class FullBookServiceImpl implements FullBookService {
         if (request.isActive() != null) product.setIsActive(request.isActive());
         if (request.featured() != null) product.setFeatured(request.featured());
 
-        // 4. Categories: only change when categoryIds provided (otherwise keep existing)
         List<Category> categoriesForResponse;
         if (request.categoryIds() != null) {
-            // validate provided ids (may throw)
             List<Category> categories = validateAndGetCategories(request.categoryIds());
-            // remove existing relations
             List<ProductCategory> existingPCs = productCategoryRepository.findByProduct_ProductId(product.getProductId());
             if (existingPCs != null && !existingPCs.isEmpty()) {
                 productCategoryRepository.deleteAll(existingPCs);
             }
-            // link new
             linkCategoriesToProduct(product, categories);
             categoriesForResponse = categories;
         } else {
-            // keep existing categories for response
             List<ProductCategory> existingPCs = productCategoryRepository.findByProduct_ProductId(product.getProductId());
             categoriesForResponse = existingPCs == null ? List.of() :
                     existingPCs.stream().map(ProductCategory::getCategory).collect(Collectors.toList());
@@ -141,18 +129,13 @@ public class FullBookServiceImpl implements FullBookService {
         Asset linkedAsset = null;
         Author linkedAuthor = null;
 
-        // 5. Asset handling:
-        // - if url provided -> update existing MAIN asset or create new
-        // - if url not provided -> keep existing main asset
         if (request.url() != null && !request.url().isBlank()) {
             ProductAsset existingPA = productAssetRepository.findFirstByProduct_ProductIdAndType(product.getProductId(), ProductAssetType.MAIN);
             if (existingPA != null && existingPA.getAsset() != null) {
                 Asset a = existingPA.getAsset();
-                // if url changed and exists elsewhere -> conflict
                 if (!request.url().equals(a.getUrl()) && assetRepository.existsByUrl(request.url())) {
                     throw new AppException(ErrorCode.URL_EXISTED);
                 }
-                // update provided fields only
                 a.setUrl(request.url());
                 if (request.fileName() != null) a.setFileName(request.fileName());
                 if (request.mimeType() != null) a.setMimeType(request.mimeType());
@@ -162,24 +145,17 @@ public class FullBookServiceImpl implements FullBookService {
                 a.setUpdatedAt(LocalDateTime.now());
                 linkedAsset = assetRepository.save(a);
             } else {
-                // create new asset and link
                 if (assetRepository.existsByUrl(request.url())) {
                     throw new AppException(ErrorCode.URL_EXISTED);
                 }
                 linkedAsset = createAndLinkAsset(request, product);
             }
         } else {
-            // keep existing if any
             ProductAsset existingPA = productAssetRepository.findFirstByProduct_ProductIdAndType(product.getProductId(), ProductAssetType.MAIN);
             if (existingPA != null) linkedAsset = existingPA.getAsset();
         }
 
-        // 6. Author handling:
-        // - If authorId provided -> link to existing author (create BookAuthor if needed)
-        // - Else if authorName provided -> find or create author, then link
-        // - Else -> keep existing author relations untouched
         if (request.authorId() != null || (request.authorName() != null && !request.authorName().isBlank())) {
-            // remove existing book-author relations first
             List<BookAuthor> existingBAs = bookAuthorRepository.findByProduct_ProductId(product.getProductId());
             if (existingBAs != null && !existingBAs.isEmpty()) {
                 bookAuthorRepository.deleteAll(existingBAs);
@@ -188,7 +164,6 @@ public class FullBookServiceImpl implements FullBookService {
             if (request.authorId() != null) {
                 linkedAuthor = authorRepository.findById(request.authorId())
                         .orElseThrow(() -> new AppException(ErrorCode.AUTHOR_NOT_FOUND));
-                // create BookAuthor relation if not exists
                 BookAuthorId baId = BookAuthorId.builder()
                         .productId(product.getProductId())
                         .authorId(linkedAuthor.getAuthorId())
@@ -203,7 +178,6 @@ public class FullBookServiceImpl implements FullBookService {
                     bookAuthorRepository.save(ba);
                 }
             } else {
-                // authorName provided
                 Author found = authorRepository.findByAuthorName(request.authorName()).orElse(null);
                 if (found != null) {
                     linkedAuthor = found;
@@ -230,19 +204,15 @@ public class FullBookServiceImpl implements FullBookService {
                 }
             }
         } else {
-            // request doesn't provide author info -> preserve existing author (if any)
             List<BookAuthor> existingBAs = bookAuthorRepository.findByProduct_ProductId(product.getProductId());
             if (existingBAs != null && !existingBAs.isEmpty()) {
-                // pick first author for response (could be multiple)
                 linkedAuthor = existingBAs.get(0).getAuthor();
             }
         }
 
-        // 7. Update timestamps & save product
         product.setUpdatedAt(LocalDateTime.now());
         Product updatedProduct = productRepository.save(product);
 
-        // 8. Return mapped response with categories (either updated or existing), linkedAsset and linkedAuthor
         return fullBookMapper.toFullResponse(updatedProduct, categoriesForResponse, linkedAsset, linkedAuthor);
     }
 
@@ -253,7 +223,6 @@ public class FullBookServiceImpl implements FullBookService {
 
         List<Category> categories = categoryRepository.findAllById(categoryIds);
 
-        // Kiểm tra xem tất cả categoryIds có tồn tại không
         if (categories.size() != categoryIds.size()) {
             List<Integer> foundIds = categories.stream()
                     .map(Category::getCategoryId)
@@ -266,7 +235,6 @@ public class FullBookServiceImpl implements FullBookService {
             throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
         }
 
-        // Kiểm tra categories có active không
         List<Category> inactiveCategories = categories.stream()
                 .filter(category -> !category.getIsActive())
                 .toList();
@@ -289,7 +257,6 @@ public class FullBookServiceImpl implements FullBookService {
         productCategoryRepository.saveAll(productCategories);
     }
 
-    // createAndLinkAsset for create-request
     private Asset createAndLinkAsset(FullBookRequest request, Product product) {
         if (assetRepository.existsByUrl(request.url())) {
             throw new AppException(ErrorCode.URL_EXISTED);
@@ -321,7 +288,6 @@ public class FullBookServiceImpl implements FullBookService {
         return savedAsset;
     }
 
-    // createAndLinkAsset overload for update-request
     private Asset createAndLinkAsset(FullBookUpdateRequest request, Product product) {
         if (assetRepository.existsByUrl(request.url())) {
             throw new AppException(ErrorCode.URL_EXISTED);
@@ -353,7 +319,6 @@ public class FullBookServiceImpl implements FullBookService {
         return savedAsset;
     }
 
-    // createAndLinkAuthor for create-request
     private Author createAndLinkAuthor(FullBookRequest request, Product product, Asset asset) {
         if (authorRepository.existsByAuthorName(request.authorName())) {
             throw new AppException(ErrorCode.AUTHOR_EXISTED);
@@ -393,7 +358,6 @@ public class FullBookServiceImpl implements FullBookService {
         return savedAuthor;
     }
 
-    // createAndLinkAuthor overload for update-request
     private Author createAndLinkAuthor(FullBookUpdateRequest request, Product product, Asset asset) {
         if (authorRepository.existsByAuthorName(request.authorName())) {
             throw new AppException(ErrorCode.AUTHOR_EXISTED);

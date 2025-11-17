@@ -4,6 +4,8 @@ import com.ecommerce.store.dto.request.model_request.ReviewRequest;
 import com.ecommerce.store.dto.request.model_request.ReviewUpdateRequest;
 import com.ecommerce.store.dto.response.ApiResponse;
 import com.ecommerce.store.dto.response.model_response.ReviewResponse;
+import com.ecommerce.store.enums.error.ErrorCode;
+import com.ecommerce.store.exception.AppException;
 import com.ecommerce.store.service.model_service.ReviewService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -100,10 +102,25 @@ public class ReviewController {
     }
 
     @GetMapping("/public/products/{productId}")
-    public ApiResponse<List<ReviewResponse>> getPublicReviewsByProduct(@PathVariable Integer productId) {
-        return ApiResponse
-                .<List<ReviewResponse>>builder()
-                .result(reviewService.getApprovedReviewsByProduct(productId))
-                .build();
+    public ApiResponse<List<ReviewResponse>> getPublicReviewsByProduct(
+            @PathVariable Integer productId,
+            @RequestParam(name = "minRating", required = false, defaultValue = "0") Float minRating
+    ) {
+        if (minRating == null) minRating = 0f;
+        if (minRating < 0f || minRating > 5f) {
+            throw new AppException(ErrorCode.INVALID_RATING);
+        }
+
+        float roundedMin = Math.round(minRating * 2f) / 2f;
+
+        if (roundedMin <= 0f) {
+            return ApiResponse.<List<ReviewResponse>>builder()
+                    .result(reviewService.getApprovedReviewsByProduct(productId))
+                    .build();
+        } else {
+            return ApiResponse.<List<ReviewResponse>>builder()
+                    .result(reviewService.getApprovedReviewsByProductAndMinRating(productId, roundedMin))
+                    .build();
+        }
     }
 }

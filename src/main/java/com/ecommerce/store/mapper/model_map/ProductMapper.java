@@ -1,10 +1,7 @@
 package com.ecommerce.store.mapper.model_map;
 
 import com.ecommerce.store.dto.request.model_request.ProductRequest;
-import com.ecommerce.store.dto.response.model_response.CategoryResponse;
-import com.ecommerce.store.dto.response.model_response.ProductResponse;
-import com.ecommerce.store.dto.response.model_response.ProductAssetResponse;
-import com.ecommerce.store.dto.response.model_response.BookAuthorResponse;
+import com.ecommerce.store.dto.response.model_response.*;
 import com.ecommerce.store.entity.*;
 import org.mapstruct.*;
 
@@ -13,7 +10,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring",
+@Mapper(
+        componentModel = "spring",
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         uses = {ProductAssetMapper.class, BookAuthorMapper.class}
 )
@@ -32,16 +30,16 @@ public interface ProductMapper {
         if (product.getProductAssets() != null) {
             product.getProductAssets().forEach(asset -> asset.setProduct(product));
         }
-
         if (product.getBookAuthors() != null) {
             product.getBookAuthors().forEach(pa -> pa.setProduct(product));
         }
     }
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateProductFromRequest(ProductRequest request, @MappingTarget Product product);
+
     default ProductResponse toProductResponse(Product product) {
-        if (product == null) {
-            return null;
-        }
+        if (product == null) return null;
 
         return ProductResponse.builder()
                 .productId(product.getProductId())
@@ -57,26 +55,22 @@ public interface ProductMapper {
                 .productAssets(mapProductAssets(product.getProductAssets()))
                 .bookAuthors(mapBookAuthors(product.getBookAuthors()))
                 .categories(mapCategories(product.getProductCategory()))
+                .averageRating(calculateAverageRating(product))
+                .reviewCount(calculateReviewCount(product))
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
                 .build();
     }
 
     default List<ProductAssetResponse> mapProductAssets(Set<ProductAsset> productAssets) {
-        if (productAssets == null) {
-            return List.of();
-        }
-
+        if (productAssets == null) return List.of();
         return productAssets.stream()
                 .map(this::toProductAssetResponse)
                 .collect(Collectors.toList());
     }
 
     default ProductAssetResponse toProductAssetResponse(ProductAsset productAsset) {
-        if (productAsset == null) {
-            return null;
-        }
-
+        if (productAsset == null || productAsset.getAsset() == null) return null;
         return ProductAssetResponse.builder()
                 .assetId(productAsset.getAsset().getAssetId())
                 .url(productAsset.getAsset().getUrl())
@@ -86,32 +80,23 @@ public interface ProductMapper {
     }
 
     default List<BookAuthorResponse> mapBookAuthors(Set<BookAuthor> bookAuthors) {
-        if (bookAuthors == null) {
-            return List.of();
-        }
-
+        if (bookAuthors == null) return List.of();
         return bookAuthors.stream()
                 .map(this::toBookAuthorResponse)
                 .collect(Collectors.toList());
     }
 
     default BookAuthorResponse toBookAuthorResponse(BookAuthor bookAuthor) {
-        if (bookAuthor == null) {
-            return null;
-        }
-
+        if (bookAuthor == null || bookAuthor.getAuthor() == null) return null;
         return BookAuthorResponse.builder()
                 .authorId(bookAuthor.getAuthor().getAuthorId())
                 .authorName(bookAuthor.getAuthor().getAuthorName())
-                .authorRole(bookAuthor.getAuthorRole() != null ? bookAuthor.getAuthorRole() : null)
+                .authorRole(bookAuthor.getAuthorRole())
                 .build();
     }
 
     default List<CategoryResponse> mapCategories(Set<ProductCategory> productCategories) {
-        if (productCategories == null) {
-            return List.of();
-        }
-
+        if (productCategories == null) return List.of();
         return productCategories.stream()
                 .map(ProductCategory::getCategory)
                 .filter(Objects::nonNull)
@@ -120,10 +105,7 @@ public interface ProductMapper {
     }
 
     default CategoryResponse toCategoryResponse(Category category) {
-        if (category == null) {
-            return null;
-        }
-
+        if (category == null) return null;
         return CategoryResponse.builder()
                 .categoryId(category.getCategoryId())
                 .categoryName(category.getCategoryName())
@@ -135,12 +117,9 @@ public interface ProductMapper {
     }
 
     default Double calculateAverageRating(Product product) {
-        if (product.getReviews() == null || product.getReviews().isEmpty()) {
-            return 0.0;
-        }
-
+        if (product.getReviews() == null || product.getReviews().isEmpty()) return 0.0;
         return product.getReviews().stream()
-                .mapToDouble(review -> review.getRating() != null ? review.getRating().doubleValue() : 0.0)
+                .mapToDouble(r -> r.getRating() != null ? r.getRating().doubleValue() : 0.0)
                 .average()
                 .orElse(0.0);
     }
@@ -148,6 +127,4 @@ public interface ProductMapper {
     default Integer calculateReviewCount(Product product) {
         return product.getReviews() != null ? product.getReviews().size() : 0;
     }
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateProductFromRequest(ProductRequest request, @MappingTarget Product product);
 }

@@ -24,4 +24,7 @@ public interface ReviewService {
     void deleteReviewAsAdmin(Integer reviewId);
 
     List<ReviewResponse> getApprovedReviewsByProduct(Integer productId);
+
+    List<ReviewResponse> getApprovedReviewsByProductAndMinRating(Integer productId, Float minRating);
 }
+

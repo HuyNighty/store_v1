@@ -89,10 +89,10 @@ public class ProductController {
     public ApiResponse<List<ProductResponse>> filterProducts(
             @RequestParam(required = false) Integer categoryId,
             @RequestParam(required = false) BigDecimal minPrice,
-            @RequestParam(required = false) BigDecimal maxPrice) {
-        return ApiResponse
-                .<List<ProductResponse>>builder()
-                .result(productService.filterProducts(categoryId, minPrice, maxPrice))
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) Double minRating) {
+        return ApiResponse.<List<ProductResponse>>builder()
+                .result(productService.filterProducts(categoryId, minPrice, maxPrice, minRating))
                 .build();
     }
 }

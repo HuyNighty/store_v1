@@ -136,4 +136,11 @@ public class ReviewServiceImpl implements ReviewService {
                 reviewRepository.findByProductProductIdAndIsApprovedTrue(productId)
         );
     }
+
+    @Override
+    public List<ReviewResponse> getApprovedReviewsByProductAndMinRating(Integer productId, Float minRating) {
+        return reviewMapper.toResponseList(
+                reviewRepository.findByProductProductIdAndIsApprovedTrueAndRatingGreaterThanEqual(productId, minRating)
+        );
+    }
 }
