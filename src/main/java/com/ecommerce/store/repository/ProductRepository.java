@@ -19,6 +19,13 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     List<Product> findByProductNameContainingIgnoreCase(String keyword);
 
+    @Query("SELECT DISTINCT p FROM Product p " +
+            "JOIN FETCH p.productAssets pa " +
+            "JOIN p.productCategory pc " +
+            "WHERE LOWER(pc.category.categoryName) LIKE CONCAT('%', LOWER(:categoryName), '%')")
+    List<Product> findWithAssetsByCategoryNameContainingIgnoreCase(@Param("categoryName") String categoryName);
+
+
     @Query("SELECT p FROM Product p " +
             "LEFT JOIN FETCH p.productAssets pa " +
             "LEFT JOIN FETCH pa.asset " +

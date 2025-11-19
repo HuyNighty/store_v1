@@ -1,6 +1,7 @@
 package com.ecommerce.store.mapper.model_map;
 
 import com.ecommerce.store.dto.request.model_request.CategoryRequest;
+import com.ecommerce.store.dto.request.model_request.CategoryUpdateRequest;
 import com.ecommerce.store.dto.response.model_response.CategoryResponse;
 import com.ecommerce.store.entity.Category;
 import org.mapstruct.BeanMapping;
@@ -16,5 +17,5 @@ public interface CategoryMapper {
     CategoryResponse toResponse(Category entity);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateCategoryFromRequest(CategoryRequest request, @MappingTarget Category entity);
+    void updateCategoryFromRequest(CategoryUpdateRequest request, @MappingTarget Category entity);
 }

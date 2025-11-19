@@ -1,6 +1,7 @@
 package com.ecommerce.store.controller.model_controller;
 
 import com.ecommerce.store.dto.request.model_request.CategoryRequest;
+import com.ecommerce.store.dto.request.model_request.CategoryUpdateRequest;
 import com.ecommerce.store.dto.response.ApiResponse;
 import com.ecommerce.store.dto.response.model_response.CategoryResponse;
 import com.ecommerce.store.service.model_service.CategoryService;
@@ -65,7 +66,7 @@ public class CategoryController {
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<CategoryResponse> update(
             @PathVariable Integer id,
-            @RequestBody CategoryRequest request) {
+            @RequestBody CategoryUpdateRequest request) {
         return ApiResponse
                 .<CategoryResponse>builder()
                 .result(categoryService.update(id, request))
