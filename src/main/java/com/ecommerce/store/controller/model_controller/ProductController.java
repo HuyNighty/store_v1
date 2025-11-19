@@ -47,6 +47,14 @@ public class ProductController {
                 .build();
     }
 
+    @GetMapping("/public/{categoryName}")
+    public ApiResponse<List<ProductResponse>> getAllProductsByCategoryName(@PathVariable String categoryName) {
+        return ApiResponse
+                .<List<ProductResponse>>builder()
+                .result(productService.getProductsByCategoryName(categoryName))
+                .build();
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{productId}")
     public ApiResponse<ProductResponse> updateProduct(

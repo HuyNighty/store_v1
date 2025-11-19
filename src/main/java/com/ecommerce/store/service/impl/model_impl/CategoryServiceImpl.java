@@ -1,6 +1,7 @@
 package com.ecommerce.store.service.impl.model_impl;
 
 import com.ecommerce.store.dto.request.model_request.CategoryRequest;
+import com.ecommerce.store.dto.request.model_request.CategoryUpdateRequest;
 import com.ecommerce.store.dto.response.model_response.CategoryResponse;
 import com.ecommerce.store.entity.Category;
 import com.ecommerce.store.enums.error.ErrorCode;
@@ -39,7 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryResponse update(Integer id, CategoryRequest request) {
+    public CategoryResponse update(Integer id, CategoryUpdateRequest request) {
         Category entity = categoryRepository.findById(id)
                 .filter(c -> c.getDeletedAt() == null)
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));

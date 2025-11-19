@@ -13,5 +13,6 @@ public interface ProductService {
     List<ProductResponse> getAllProducts();
     List<ProductResponse> searchProducts(String keyword);
     List<ProductResponse> getProductsByCategory(Integer categoryId);
+    List<ProductResponse> getProductsByCategoryName(String categoryName);
     List<ProductResponse> filterProducts(Integer categoryId, java.math.BigDecimal minPrice, java.math.BigDecimal maxPrice, Double minRating);
 }

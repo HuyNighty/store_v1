@@ -120,6 +120,14 @@ public class ProductServiceImpl implements ProductService {
                 .collect(java.util.stream.Collectors.toList());
     }
 
+    @Override
+    public List<ProductResponse> getProductsByCategoryName(String categoryName) {
+        List<Product> products = productRepository.findWithAssetsByCategoryNameContainingIgnoreCase(categoryName);
+        return products.stream()
+                .map(productMapper::toProductResponse)
+                .collect(java.util.stream.Collectors.toList());
+    }
+
     public List<ProductResponse> filterProducts(
             Integer categoryId, BigDecimal minPrice, BigDecimal maxPrice, Double minRating) {
         List<Product> products = productRepository.findWithFiltersAndRating(categoryId, minPrice, maxPrice, minRating);
