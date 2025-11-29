@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -139,11 +140,16 @@ public class CustomerServiceImpl implements CustomerService {
 
             String imageUrl = "/uploads/profile-images/" + fileName;
 
+            String absoluteUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/Store")
+                    .path(imageUrl)
+                    .toUriString();
+
             customer.setProfileImage(imageUrl);
             customer.setUpdatedAt(LocalDateTime.now());
             customerRepository.save(customer);
 
-            return imageUrl;
+            return absoluteUrl;
 
         } catch (IOException e) {
             log.error("Error uploading profile image", e);

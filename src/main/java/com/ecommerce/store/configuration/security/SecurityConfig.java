@@ -36,7 +36,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Value("${app.frontend.origins:http://localhost:5173}")
+    @Value("${app.frontend.origins:http://localhost:5173, https://store-mocha-chi.vercel.app}")
     String FRONTEND_ORIGINS;
 
     @Value("${jwt.signerKey}")
@@ -116,16 +116,29 @@ public class SecurityConfig {
         return jwtAuthenticationConverter;
     }
 
-    
-    
+
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        List<String> origins = Arrays.asList(FRONTEND_ORIGINS.split(","));
-        config.setAllowedOrigins(origins);
+        List<String> origins = Arrays.stream(FRONTEND_ORIGINS.split(","))
+                .map(String::trim)
+                .toList();
+        config.setAllowedOriginPatterns(origins);
+
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
+        config.setAllowedHeaders(Arrays.asList(
+                "Authorization",
+                "Content-Type",
+                "Accept",
+                "X-Requested-With",
+                "Origin",
+                "Access-Control-Request-Method",
+                "Access-Control-Request-Headers",
+                "Set-Cookie"
+        ));
+
         config.setAllowCredentials(true);
         config.setExposedHeaders(Arrays.asList(HttpHeaders.AUTHORIZATION, HttpHeaders.SET_COOKIE));
 
@@ -133,6 +146,7 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", config);
         return source;
     }
+
 
     @Bean
     JwtDecoder jwtDecoder() {
