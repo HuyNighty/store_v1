@@ -14,10 +14,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -36,6 +36,9 @@ public class CustomerServiceImpl implements CustomerService {
     CustomerRepository customerRepository;
     UserRepository userRepository;
     CustomerMapper customerMapper;
+
+    @Value("${app.base-url:http://52.62.234.97}")
+    private String baseUrl;
 
     private final String UPLOAD_DIR = "uploads/profile-images/";
 
@@ -98,7 +101,6 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     public String uploadProfileImage(MultipartFile file) {
-        // Validate file
         if (file.isEmpty()) {
             throw new AppException(ErrorCode.FILE_EMPTY);
         }
@@ -138,21 +140,15 @@ public class CustomerServiceImpl implements CustomerService {
                 deleteOldImage(customer.getProfileImage());
             }
 
-            String imageUrl = "/uploads/profile-images/" + fileName;
+            String fullImageUrl = baseUrl + "/uploads/profile-images/" + fileName;
 
-            String absoluteUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/Store")
-                    .path(imageUrl)
-                    .toUriString();
-
-            customer.setProfileImage(imageUrl);
+            customer.setProfileImage(fullImageUrl);
             customer.setUpdatedAt(LocalDateTime.now());
             customerRepository.save(customer);
 
-            return absoluteUrl;
+            return fullImageUrl;
 
         } catch (IOException e) {
-            log.error("Error uploading profile image", e);
             throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
         }
     }
@@ -180,7 +176,13 @@ public class CustomerServiceImpl implements CustomerService {
         try {
             String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
             Path filePath = Paths.get(UPLOAD_DIR, fileName);
-            Files.deleteIfExists(filePath);
+
+            if (Files.exists(filePath)) {
+                Files.delete(filePath);
+                log.info("Deleted old image file: {}", fileName);
+            } else {
+                log.warn("Old image file not found: {}", filePath);
+            }
         } catch (IOException e) {
             log.warn("Could not delete old image file: {}", imageUrl, e);
         }
