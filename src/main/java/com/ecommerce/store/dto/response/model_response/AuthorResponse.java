@@ -13,5 +13,9 @@ public record AuthorResponse(
         LocalDate bornDate,
         LocalDate deathDate,
         Nationality nationality,
-        Integer assetId
+        Integer assetId,
+        String portraitUrl,
+        String wikiUrl,
+        Integer totalBooks,
+        Double averageRating
 ) {}
